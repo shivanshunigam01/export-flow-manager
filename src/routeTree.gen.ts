@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as AppIndexRouteImport } from './routes/_app.index'
+import { Route as AppReportsRouteImport } from './routes/_app.reports'
 import { Route as AppDocumentsIndexRouteImport } from './routes/_app.documents.index'
 import { Route as AppApplicationsIndexRouteImport } from './routes/_app.applications.index'
 import { Route as AppMastersShippingLinesRouteImport } from './routes/_app.masters.shipping-lines'
@@ -36,6 +37,11 @@ const AppRoute = AppRouteImport.update({
 const AppIndexRoute = AppIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppReportsRoute = AppReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
   getParentRoute: () => AppRoute,
 } as any)
 const AppDocumentsIndexRoute = AppDocumentsIndexRouteImport.update({
@@ -97,6 +103,7 @@ const AppApplicationsIdRoute = AppApplicationsIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof AppIndexRoute
   '/auth': typeof AuthRoute
+  '/reports': typeof AppReportsRoute
   '/applications/$id': typeof AppApplicationsIdRoute
   '/applications/new': typeof AppApplicationsNewRoute
   '/documents/templates': typeof AppDocumentsTemplatesRoute
@@ -111,6 +118,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
+  '/reports': typeof AppReportsRoute
   '/': typeof AppIndexRoute
   '/applications/$id': typeof AppApplicationsIdRoute
   '/applications/new': typeof AppApplicationsNewRoute
@@ -128,6 +136,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_app': typeof AppRouteWithChildren
   '/auth': typeof AuthRoute
+  '/_app/reports': typeof AppReportsRoute
   '/_app/': typeof AppIndexRoute
   '/_app/applications/$id': typeof AppApplicationsIdRoute
   '/_app/applications/new': typeof AppApplicationsNewRoute
@@ -146,6 +155,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/reports'
     | '/applications/$id'
     | '/applications/new'
     | '/documents/templates'
@@ -160,6 +170,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/auth'
+    | '/reports'
     | '/'
     | '/applications/$id'
     | '/applications/new'
@@ -176,6 +187,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/_app'
     | '/auth'
+    | '/_app/reports'
     | '/_app/'
     | '/_app/applications/$id'
     | '/_app/applications/new'
@@ -216,6 +228,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/reports': {
+      id: '/_app/reports'
+      path: '/reports'
+      fullPath: '/reports'
+      preLoaderRoute: typeof AppReportsRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/documents/': {
@@ -299,6 +318,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AppRouteChildren {
+  AppReportsRoute: typeof AppReportsRoute
   AppIndexRoute: typeof AppIndexRoute
   AppApplicationsIdRoute: typeof AppApplicationsIdRoute
   AppApplicationsNewRoute: typeof AppApplicationsNewRoute
@@ -314,6 +334,7 @@ interface AppRouteChildren {
 }
 
 const AppRouteChildren: AppRouteChildren = {
+  AppReportsRoute: AppReportsRoute,
   AppIndexRoute: AppIndexRoute,
   AppApplicationsIdRoute: AppApplicationsIdRoute,
   AppApplicationsNewRoute: AppApplicationsNewRoute,

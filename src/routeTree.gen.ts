@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as AppIndexRouteImport } from './routes/_app.index'
+import { Route as AppSettingsRouteImport } from './routes/_app.settings'
 import { Route as AppReportsRouteImport } from './routes/_app.reports'
 import { Route as AppNotificationsRouteImport } from './routes/_app.notifications'
 import { Route as AppDocumentsIndexRouteImport } from './routes/_app.documents.index'
@@ -38,6 +39,11 @@ const AppRoute = AppRouteImport.update({
 const AppIndexRoute = AppIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSettingsRoute = AppSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
   getParentRoute: () => AppRoute,
 } as any)
 const AppReportsRoute = AppReportsRouteImport.update({
@@ -111,6 +117,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/notifications': typeof AppNotificationsRoute
   '/reports': typeof AppReportsRoute
+  '/settings': typeof AppSettingsRoute
   '/applications/$id': typeof AppApplicationsIdRoute
   '/applications/new': typeof AppApplicationsNewRoute
   '/documents/templates': typeof AppDocumentsTemplatesRoute
@@ -127,6 +134,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/notifications': typeof AppNotificationsRoute
   '/reports': typeof AppReportsRoute
+  '/settings': typeof AppSettingsRoute
   '/': typeof AppIndexRoute
   '/applications/$id': typeof AppApplicationsIdRoute
   '/applications/new': typeof AppApplicationsNewRoute
@@ -146,6 +154,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/_app/notifications': typeof AppNotificationsRoute
   '/_app/reports': typeof AppReportsRoute
+  '/_app/settings': typeof AppSettingsRoute
   '/_app/': typeof AppIndexRoute
   '/_app/applications/$id': typeof AppApplicationsIdRoute
   '/_app/applications/new': typeof AppApplicationsNewRoute
@@ -166,6 +175,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/notifications'
     | '/reports'
+    | '/settings'
     | '/applications/$id'
     | '/applications/new'
     | '/documents/templates'
@@ -182,6 +192,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/notifications'
     | '/reports'
+    | '/settings'
     | '/'
     | '/applications/$id'
     | '/applications/new'
@@ -200,6 +211,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/_app/notifications'
     | '/_app/reports'
+    | '/_app/settings'
     | '/_app/'
     | '/_app/applications/$id'
     | '/_app/applications/new'
@@ -240,6 +252,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/settings': {
+      id: '/_app/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AppSettingsRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/reports': {
@@ -339,6 +358,7 @@ declare module '@tanstack/react-router' {
 interface AppRouteChildren {
   AppNotificationsRoute: typeof AppNotificationsRoute
   AppReportsRoute: typeof AppReportsRoute
+  AppSettingsRoute: typeof AppSettingsRoute
   AppIndexRoute: typeof AppIndexRoute
   AppApplicationsIdRoute: typeof AppApplicationsIdRoute
   AppApplicationsNewRoute: typeof AppApplicationsNewRoute
@@ -356,6 +376,7 @@ interface AppRouteChildren {
 const AppRouteChildren: AppRouteChildren = {
   AppNotificationsRoute: AppNotificationsRoute,
   AppReportsRoute: AppReportsRoute,
+  AppSettingsRoute: AppSettingsRoute,
   AppIndexRoute: AppIndexRoute,
   AppApplicationsIdRoute: AppApplicationsIdRoute,
   AppApplicationsNewRoute: AppApplicationsNewRoute,

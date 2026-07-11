@@ -9,61 +9,415 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AppRouteImport } from './routes/_app'
+import { Route as AppIndexRouteImport } from './routes/_app.index'
+import { Route as AppSettingsRouteImport } from './routes/_app.settings'
+import { Route as AppReportsRouteImport } from './routes/_app.reports'
+import { Route as AppNotificationsRouteImport } from './routes/_app.notifications'
+import { Route as AppDocumentsIndexRouteImport } from './routes/_app.documents.index'
+import { Route as AppApplicationsIndexRouteImport } from './routes/_app.applications.index'
+import { Route as AppMastersShippingLinesRouteImport } from './routes/_app.masters.shipping-lines'
+import { Route as AppMastersProductsRouteImport } from './routes/_app.masters.products'
+import { Route as AppMastersPortsRouteImport } from './routes/_app.masters.ports'
+import { Route as AppMastersCustomersRouteImport } from './routes/_app.masters.customers'
+import { Route as AppMastersCountriesRouteImport } from './routes/_app.masters.countries'
+import { Route as AppMastersBanksRouteImport } from './routes/_app.masters.banks'
+import { Route as AppDocumentsTemplatesRouteImport } from './routes/_app.documents.templates'
+import { Route as AppApplicationsNewRouteImport } from './routes/_app.applications.new'
+import { Route as AppApplicationsIdRouteImport } from './routes/_app.applications.$id'
+import { Route as AppAdminUsersRouteImport } from './routes/_app.admin.users'
 
-const IndexRoute = IndexRouteImport.update({
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppRoute = AppRouteImport.update({
+  id: '/_app',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppIndexRoute = AppIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSettingsRoute = AppSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppReportsRoute = AppReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppNotificationsRoute = AppNotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDocumentsIndexRoute = AppDocumentsIndexRouteImport.update({
+  id: '/documents/',
+  path: '/documents/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppApplicationsIndexRoute = AppApplicationsIndexRouteImport.update({
+  id: '/applications/',
+  path: '/applications/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppMastersShippingLinesRoute = AppMastersShippingLinesRouteImport.update({
+  id: '/masters/shipping-lines',
+  path: '/masters/shipping-lines',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppMastersProductsRoute = AppMastersProductsRouteImport.update({
+  id: '/masters/products',
+  path: '/masters/products',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppMastersPortsRoute = AppMastersPortsRouteImport.update({
+  id: '/masters/ports',
+  path: '/masters/ports',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppMastersCustomersRoute = AppMastersCustomersRouteImport.update({
+  id: '/masters/customers',
+  path: '/masters/customers',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppMastersCountriesRoute = AppMastersCountriesRouteImport.update({
+  id: '/masters/countries',
+  path: '/masters/countries',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppMastersBanksRoute = AppMastersBanksRouteImport.update({
+  id: '/masters/banks',
+  path: '/masters/banks',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDocumentsTemplatesRoute = AppDocumentsTemplatesRouteImport.update({
+  id: '/documents/templates',
+  path: '/documents/templates',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppApplicationsNewRoute = AppApplicationsNewRouteImport.update({
+  id: '/applications/new',
+  path: '/applications/new',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppApplicationsIdRoute = AppApplicationsIdRouteImport.update({
+  id: '/applications/$id',
+  path: '/applications/$id',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAdminUsersRoute = AppAdminUsersRouteImport.update({
+  id: '/admin/users',
+  path: '/admin/users',
+  getParentRoute: () => AppRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
+  '/': typeof AppIndexRoute
+  '/auth': typeof AuthRoute
+  '/notifications': typeof AppNotificationsRoute
+  '/reports': typeof AppReportsRoute
+  '/settings': typeof AppSettingsRoute
+  '/admin/users': typeof AppAdminUsersRoute
+  '/applications/$id': typeof AppApplicationsIdRoute
+  '/applications/new': typeof AppApplicationsNewRoute
+  '/documents/templates': typeof AppDocumentsTemplatesRoute
+  '/masters/banks': typeof AppMastersBanksRoute
+  '/masters/countries': typeof AppMastersCountriesRoute
+  '/masters/customers': typeof AppMastersCustomersRoute
+  '/masters/ports': typeof AppMastersPortsRoute
+  '/masters/products': typeof AppMastersProductsRoute
+  '/masters/shipping-lines': typeof AppMastersShippingLinesRoute
+  '/applications/': typeof AppApplicationsIndexRoute
+  '/documents/': typeof AppDocumentsIndexRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/notifications': typeof AppNotificationsRoute
+  '/reports': typeof AppReportsRoute
+  '/settings': typeof AppSettingsRoute
+  '/': typeof AppIndexRoute
+  '/admin/users': typeof AppAdminUsersRoute
+  '/applications/$id': typeof AppApplicationsIdRoute
+  '/applications/new': typeof AppApplicationsNewRoute
+  '/documents/templates': typeof AppDocumentsTemplatesRoute
+  '/masters/banks': typeof AppMastersBanksRoute
+  '/masters/countries': typeof AppMastersCountriesRoute
+  '/masters/customers': typeof AppMastersCustomersRoute
+  '/masters/ports': typeof AppMastersPortsRoute
+  '/masters/products': typeof AppMastersProductsRoute
+  '/masters/shipping-lines': typeof AppMastersShippingLinesRoute
+  '/applications': typeof AppApplicationsIndexRoute
+  '/documents': typeof AppDocumentsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
+  '/_app': typeof AppRouteWithChildren
+  '/auth': typeof AuthRoute
+  '/_app/notifications': typeof AppNotificationsRoute
+  '/_app/reports': typeof AppReportsRoute
+  '/_app/settings': typeof AppSettingsRoute
+  '/_app/': typeof AppIndexRoute
+  '/_app/admin/users': typeof AppAdminUsersRoute
+  '/_app/applications/$id': typeof AppApplicationsIdRoute
+  '/_app/applications/new': typeof AppApplicationsNewRoute
+  '/_app/documents/templates': typeof AppDocumentsTemplatesRoute
+  '/_app/masters/banks': typeof AppMastersBanksRoute
+  '/_app/masters/countries': typeof AppMastersCountriesRoute
+  '/_app/masters/customers': typeof AppMastersCustomersRoute
+  '/_app/masters/ports': typeof AppMastersPortsRoute
+  '/_app/masters/products': typeof AppMastersProductsRoute
+  '/_app/masters/shipping-lines': typeof AppMastersShippingLinesRoute
+  '/_app/applications/': typeof AppApplicationsIndexRoute
+  '/_app/documents/': typeof AppDocumentsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/notifications'
+    | '/reports'
+    | '/settings'
+    | '/admin/users'
+    | '/applications/$id'
+    | '/applications/new'
+    | '/documents/templates'
+    | '/masters/banks'
+    | '/masters/countries'
+    | '/masters/customers'
+    | '/masters/ports'
+    | '/masters/products'
+    | '/masters/shipping-lines'
+    | '/applications/'
+    | '/documents/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/auth'
+    | '/notifications'
+    | '/reports'
+    | '/settings'
+    | '/'
+    | '/admin/users'
+    | '/applications/$id'
+    | '/applications/new'
+    | '/documents/templates'
+    | '/masters/banks'
+    | '/masters/countries'
+    | '/masters/customers'
+    | '/masters/ports'
+    | '/masters/products'
+    | '/masters/shipping-lines'
+    | '/applications'
+    | '/documents'
+  id:
+    | '__root__'
+    | '/_app'
+    | '/auth'
+    | '/_app/notifications'
+    | '/_app/reports'
+    | '/_app/settings'
+    | '/_app/'
+    | '/_app/admin/users'
+    | '/_app/applications/$id'
+    | '/_app/applications/new'
+    | '/_app/documents/templates'
+    | '/_app/masters/banks'
+    | '/_app/masters/countries'
+    | '/_app/masters/customers'
+    | '/_app/masters/ports'
+    | '/_app/masters/products'
+    | '/_app/masters/shipping-lines'
+    | '/_app/applications/'
+    | '/_app/documents/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
+  AppRoute: typeof AppRouteWithChildren
+  AuthRoute: typeof AuthRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_app': {
+      id: '/_app'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_app/': {
+      id: '/_app/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/settings': {
+      id: '/_app/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AppSettingsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/reports': {
+      id: '/_app/reports'
+      path: '/reports'
+      fullPath: '/reports'
+      preLoaderRoute: typeof AppReportsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/notifications': {
+      id: '/_app/notifications'
+      path: '/notifications'
+      fullPath: '/notifications'
+      preLoaderRoute: typeof AppNotificationsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/documents/': {
+      id: '/_app/documents/'
+      path: '/documents'
+      fullPath: '/documents/'
+      preLoaderRoute: typeof AppDocumentsIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/applications/': {
+      id: '/_app/applications/'
+      path: '/applications'
+      fullPath: '/applications/'
+      preLoaderRoute: typeof AppApplicationsIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/masters/shipping-lines': {
+      id: '/_app/masters/shipping-lines'
+      path: '/masters/shipping-lines'
+      fullPath: '/masters/shipping-lines'
+      preLoaderRoute: typeof AppMastersShippingLinesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/masters/products': {
+      id: '/_app/masters/products'
+      path: '/masters/products'
+      fullPath: '/masters/products'
+      preLoaderRoute: typeof AppMastersProductsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/masters/ports': {
+      id: '/_app/masters/ports'
+      path: '/masters/ports'
+      fullPath: '/masters/ports'
+      preLoaderRoute: typeof AppMastersPortsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/masters/customers': {
+      id: '/_app/masters/customers'
+      path: '/masters/customers'
+      fullPath: '/masters/customers'
+      preLoaderRoute: typeof AppMastersCustomersRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/masters/countries': {
+      id: '/_app/masters/countries'
+      path: '/masters/countries'
+      fullPath: '/masters/countries'
+      preLoaderRoute: typeof AppMastersCountriesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/masters/banks': {
+      id: '/_app/masters/banks'
+      path: '/masters/banks'
+      fullPath: '/masters/banks'
+      preLoaderRoute: typeof AppMastersBanksRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/documents/templates': {
+      id: '/_app/documents/templates'
+      path: '/documents/templates'
+      fullPath: '/documents/templates'
+      preLoaderRoute: typeof AppDocumentsTemplatesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/applications/new': {
+      id: '/_app/applications/new'
+      path: '/applications/new'
+      fullPath: '/applications/new'
+      preLoaderRoute: typeof AppApplicationsNewRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/applications/$id': {
+      id: '/_app/applications/$id'
+      path: '/applications/$id'
+      fullPath: '/applications/$id'
+      preLoaderRoute: typeof AppApplicationsIdRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/admin/users': {
+      id: '/_app/admin/users'
+      path: '/admin/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AppAdminUsersRouteImport
+      parentRoute: typeof AppRoute
     }
   }
 }
 
+interface AppRouteChildren {
+  AppNotificationsRoute: typeof AppNotificationsRoute
+  AppReportsRoute: typeof AppReportsRoute
+  AppSettingsRoute: typeof AppSettingsRoute
+  AppIndexRoute: typeof AppIndexRoute
+  AppAdminUsersRoute: typeof AppAdminUsersRoute
+  AppApplicationsIdRoute: typeof AppApplicationsIdRoute
+  AppApplicationsNewRoute: typeof AppApplicationsNewRoute
+  AppDocumentsTemplatesRoute: typeof AppDocumentsTemplatesRoute
+  AppMastersBanksRoute: typeof AppMastersBanksRoute
+  AppMastersCountriesRoute: typeof AppMastersCountriesRoute
+  AppMastersCustomersRoute: typeof AppMastersCustomersRoute
+  AppMastersPortsRoute: typeof AppMastersPortsRoute
+  AppMastersProductsRoute: typeof AppMastersProductsRoute
+  AppMastersShippingLinesRoute: typeof AppMastersShippingLinesRoute
+  AppApplicationsIndexRoute: typeof AppApplicationsIndexRoute
+  AppDocumentsIndexRoute: typeof AppDocumentsIndexRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppNotificationsRoute: AppNotificationsRoute,
+  AppReportsRoute: AppReportsRoute,
+  AppSettingsRoute: AppSettingsRoute,
+  AppIndexRoute: AppIndexRoute,
+  AppAdminUsersRoute: AppAdminUsersRoute,
+  AppApplicationsIdRoute: AppApplicationsIdRoute,
+  AppApplicationsNewRoute: AppApplicationsNewRoute,
+  AppDocumentsTemplatesRoute: AppDocumentsTemplatesRoute,
+  AppMastersBanksRoute: AppMastersBanksRoute,
+  AppMastersCountriesRoute: AppMastersCountriesRoute,
+  AppMastersCustomersRoute: AppMastersCustomersRoute,
+  AppMastersPortsRoute: AppMastersPortsRoute,
+  AppMastersProductsRoute: AppMastersProductsRoute,
+  AppMastersShippingLinesRoute: AppMastersShippingLinesRoute,
+  AppApplicationsIndexRoute: AppApplicationsIndexRoute,
+  AppDocumentsIndexRoute: AppDocumentsIndexRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
+  AppRoute: AppRouteWithChildren,
+  AuthRoute: AuthRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

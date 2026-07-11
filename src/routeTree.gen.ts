@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as AppIndexRouteImport } from './routes/_app.index'
+import { Route as AppDocumentsIndexRouteImport } from './routes/_app.documents.index'
 import { Route as AppApplicationsIndexRouteImport } from './routes/_app.applications.index'
 import { Route as AppMastersShippingLinesRouteImport } from './routes/_app.masters.shipping-lines'
 import { Route as AppMastersProductsRouteImport } from './routes/_app.masters.products'
@@ -34,6 +35,11 @@ const AppRoute = AppRouteImport.update({
 const AppIndexRoute = AppIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDocumentsIndexRoute = AppDocumentsIndexRouteImport.update({
+  id: '/documents/',
+  path: '/documents/',
   getParentRoute: () => AppRoute,
 } as any)
 const AppApplicationsIndexRoute = AppApplicationsIndexRouteImport.update({
@@ -94,6 +100,7 @@ export interface FileRoutesByFullPath {
   '/masters/products': typeof AppMastersProductsRoute
   '/masters/shipping-lines': typeof AppMastersShippingLinesRoute
   '/applications/': typeof AppApplicationsIndexRoute
+  '/documents/': typeof AppDocumentsIndexRoute
 }
 export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
@@ -107,6 +114,7 @@ export interface FileRoutesByTo {
   '/masters/products': typeof AppMastersProductsRoute
   '/masters/shipping-lines': typeof AppMastersShippingLinesRoute
   '/applications': typeof AppApplicationsIndexRoute
+  '/documents': typeof AppDocumentsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -122,6 +130,7 @@ export interface FileRoutesById {
   '/_app/masters/products': typeof AppMastersProductsRoute
   '/_app/masters/shipping-lines': typeof AppMastersShippingLinesRoute
   '/_app/applications/': typeof AppApplicationsIndexRoute
+  '/_app/documents/': typeof AppDocumentsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -137,6 +146,7 @@ export interface FileRouteTypes {
     | '/masters/products'
     | '/masters/shipping-lines'
     | '/applications/'
+    | '/documents/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/auth'
@@ -150,6 +160,7 @@ export interface FileRouteTypes {
     | '/masters/products'
     | '/masters/shipping-lines'
     | '/applications'
+    | '/documents'
   id:
     | '__root__'
     | '/_app'
@@ -164,6 +175,7 @@ export interface FileRouteTypes {
     | '/_app/masters/products'
     | '/_app/masters/shipping-lines'
     | '/_app/applications/'
+    | '/_app/documents/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -192,6 +204,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/documents/': {
+      id: '/_app/documents/'
+      path: '/documents'
+      fullPath: '/documents/'
+      preLoaderRoute: typeof AppDocumentsIndexRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/applications/': {
@@ -271,6 +290,7 @@ interface AppRouteChildren {
   AppMastersProductsRoute: typeof AppMastersProductsRoute
   AppMastersShippingLinesRoute: typeof AppMastersShippingLinesRoute
   AppApplicationsIndexRoute: typeof AppApplicationsIndexRoute
+  AppDocumentsIndexRoute: typeof AppDocumentsIndexRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
@@ -284,6 +304,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppMastersProductsRoute: AppMastersProductsRoute,
   AppMastersShippingLinesRoute: AppMastersShippingLinesRoute,
   AppApplicationsIndexRoute: AppApplicationsIndexRoute,
+  AppDocumentsIndexRoute: AppDocumentsIndexRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)

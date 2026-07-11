@@ -15,6 +15,7 @@ import { Route as AppIndexRouteImport } from './routes/_app.index'
 import { Route as AppApplicationsIndexRouteImport } from './routes/_app.applications.index'
 import { Route as AppMastersProductsRouteImport } from './routes/_app.masters.products'
 import { Route as AppMastersCustomersRouteImport } from './routes/_app.masters.customers'
+import { Route as AppMastersCountriesRouteImport } from './routes/_app.masters.countries'
 import { Route as AppApplicationsNewRouteImport } from './routes/_app.applications.new'
 import { Route as AppApplicationsIdRouteImport } from './routes/_app.applications.$id'
 
@@ -47,6 +48,11 @@ const AppMastersCustomersRoute = AppMastersCustomersRouteImport.update({
   path: '/masters/customers',
   getParentRoute: () => AppRoute,
 } as any)
+const AppMastersCountriesRoute = AppMastersCountriesRouteImport.update({
+  id: '/masters/countries',
+  path: '/masters/countries',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppApplicationsNewRoute = AppApplicationsNewRouteImport.update({
   id: '/applications/new',
   path: '/applications/new',
@@ -63,6 +69,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/applications/$id': typeof AppApplicationsIdRoute
   '/applications/new': typeof AppApplicationsNewRoute
+  '/masters/countries': typeof AppMastersCountriesRoute
   '/masters/customers': typeof AppMastersCustomersRoute
   '/masters/products': typeof AppMastersProductsRoute
   '/applications/': typeof AppApplicationsIndexRoute
@@ -72,6 +79,7 @@ export interface FileRoutesByTo {
   '/': typeof AppIndexRoute
   '/applications/$id': typeof AppApplicationsIdRoute
   '/applications/new': typeof AppApplicationsNewRoute
+  '/masters/countries': typeof AppMastersCountriesRoute
   '/masters/customers': typeof AppMastersCustomersRoute
   '/masters/products': typeof AppMastersProductsRoute
   '/applications': typeof AppApplicationsIndexRoute
@@ -83,6 +91,7 @@ export interface FileRoutesById {
   '/_app/': typeof AppIndexRoute
   '/_app/applications/$id': typeof AppApplicationsIdRoute
   '/_app/applications/new': typeof AppApplicationsNewRoute
+  '/_app/masters/countries': typeof AppMastersCountriesRoute
   '/_app/masters/customers': typeof AppMastersCustomersRoute
   '/_app/masters/products': typeof AppMastersProductsRoute
   '/_app/applications/': typeof AppApplicationsIndexRoute
@@ -94,6 +103,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/applications/$id'
     | '/applications/new'
+    | '/masters/countries'
     | '/masters/customers'
     | '/masters/products'
     | '/applications/'
@@ -103,6 +113,7 @@ export interface FileRouteTypes {
     | '/'
     | '/applications/$id'
     | '/applications/new'
+    | '/masters/countries'
     | '/masters/customers'
     | '/masters/products'
     | '/applications'
@@ -113,6 +124,7 @@ export interface FileRouteTypes {
     | '/_app/'
     | '/_app/applications/$id'
     | '/_app/applications/new'
+    | '/_app/masters/countries'
     | '/_app/masters/customers'
     | '/_app/masters/products'
     | '/_app/applications/'
@@ -167,6 +179,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppMastersCustomersRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/masters/countries': {
+      id: '/_app/masters/countries'
+      path: '/masters/countries'
+      fullPath: '/masters/countries'
+      preLoaderRoute: typeof AppMastersCountriesRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/applications/new': {
       id: '/_app/applications/new'
       path: '/applications/new'
@@ -188,6 +207,7 @@ interface AppRouteChildren {
   AppIndexRoute: typeof AppIndexRoute
   AppApplicationsIdRoute: typeof AppApplicationsIdRoute
   AppApplicationsNewRoute: typeof AppApplicationsNewRoute
+  AppMastersCountriesRoute: typeof AppMastersCountriesRoute
   AppMastersCustomersRoute: typeof AppMastersCustomersRoute
   AppMastersProductsRoute: typeof AppMastersProductsRoute
   AppApplicationsIndexRoute: typeof AppApplicationsIndexRoute
@@ -197,6 +217,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppIndexRoute: AppIndexRoute,
   AppApplicationsIdRoute: AppApplicationsIdRoute,
   AppApplicationsNewRoute: AppApplicationsNewRoute,
+  AppMastersCountriesRoute: AppMastersCountriesRoute,
   AppMastersCustomersRoute: AppMastersCustomersRoute,
   AppMastersProductsRoute: AppMastersProductsRoute,
   AppApplicationsIndexRoute: AppApplicationsIndexRoute,

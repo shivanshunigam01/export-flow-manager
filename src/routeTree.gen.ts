@@ -26,6 +26,7 @@ import { Route as AppMastersBanksRouteImport } from './routes/_app.masters.banks
 import { Route as AppDocumentsTemplatesRouteImport } from './routes/_app.documents.templates'
 import { Route as AppApplicationsNewRouteImport } from './routes/_app.applications.new'
 import { Route as AppApplicationsIdRouteImport } from './routes/_app.applications.$id'
+import { Route as AppAdminUsersRouteImport } from './routes/_app.admin.users'
 
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
@@ -111,6 +112,11 @@ const AppApplicationsIdRoute = AppApplicationsIdRouteImport.update({
   path: '/applications/$id',
   getParentRoute: () => AppRoute,
 } as any)
+const AppAdminUsersRoute = AppAdminUsersRouteImport.update({
+  id: '/admin/users',
+  path: '/admin/users',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AppIndexRoute
@@ -118,6 +124,7 @@ export interface FileRoutesByFullPath {
   '/notifications': typeof AppNotificationsRoute
   '/reports': typeof AppReportsRoute
   '/settings': typeof AppSettingsRoute
+  '/admin/users': typeof AppAdminUsersRoute
   '/applications/$id': typeof AppApplicationsIdRoute
   '/applications/new': typeof AppApplicationsNewRoute
   '/documents/templates': typeof AppDocumentsTemplatesRoute
@@ -136,6 +143,7 @@ export interface FileRoutesByTo {
   '/reports': typeof AppReportsRoute
   '/settings': typeof AppSettingsRoute
   '/': typeof AppIndexRoute
+  '/admin/users': typeof AppAdminUsersRoute
   '/applications/$id': typeof AppApplicationsIdRoute
   '/applications/new': typeof AppApplicationsNewRoute
   '/documents/templates': typeof AppDocumentsTemplatesRoute
@@ -156,6 +164,7 @@ export interface FileRoutesById {
   '/_app/reports': typeof AppReportsRoute
   '/_app/settings': typeof AppSettingsRoute
   '/_app/': typeof AppIndexRoute
+  '/_app/admin/users': typeof AppAdminUsersRoute
   '/_app/applications/$id': typeof AppApplicationsIdRoute
   '/_app/applications/new': typeof AppApplicationsNewRoute
   '/_app/documents/templates': typeof AppDocumentsTemplatesRoute
@@ -176,6 +185,7 @@ export interface FileRouteTypes {
     | '/notifications'
     | '/reports'
     | '/settings'
+    | '/admin/users'
     | '/applications/$id'
     | '/applications/new'
     | '/documents/templates'
@@ -194,6 +204,7 @@ export interface FileRouteTypes {
     | '/reports'
     | '/settings'
     | '/'
+    | '/admin/users'
     | '/applications/$id'
     | '/applications/new'
     | '/documents/templates'
@@ -213,6 +224,7 @@ export interface FileRouteTypes {
     | '/_app/reports'
     | '/_app/settings'
     | '/_app/'
+    | '/_app/admin/users'
     | '/_app/applications/$id'
     | '/_app/applications/new'
     | '/_app/documents/templates'
@@ -352,6 +364,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppApplicationsIdRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/admin/users': {
+      id: '/_app/admin/users'
+      path: '/admin/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AppAdminUsersRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
@@ -360,6 +379,7 @@ interface AppRouteChildren {
   AppReportsRoute: typeof AppReportsRoute
   AppSettingsRoute: typeof AppSettingsRoute
   AppIndexRoute: typeof AppIndexRoute
+  AppAdminUsersRoute: typeof AppAdminUsersRoute
   AppApplicationsIdRoute: typeof AppApplicationsIdRoute
   AppApplicationsNewRoute: typeof AppApplicationsNewRoute
   AppDocumentsTemplatesRoute: typeof AppDocumentsTemplatesRoute
@@ -378,6 +398,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppReportsRoute: AppReportsRoute,
   AppSettingsRoute: AppSettingsRoute,
   AppIndexRoute: AppIndexRoute,
+  AppAdminUsersRoute: AppAdminUsersRoute,
   AppApplicationsIdRoute: AppApplicationsIdRoute,
   AppApplicationsNewRoute: AppApplicationsNewRoute,
   AppDocumentsTemplatesRoute: AppDocumentsTemplatesRoute,

@@ -13,6 +13,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as AppIndexRouteImport } from './routes/_app.index'
 import { Route as AppApplicationsIndexRouteImport } from './routes/_app.applications.index'
+import { Route as AppMastersShippingLinesRouteImport } from './routes/_app.masters.shipping-lines'
 import { Route as AppMastersProductsRouteImport } from './routes/_app.masters.products'
 import { Route as AppMastersPortsRouteImport } from './routes/_app.masters.ports'
 import { Route as AppMastersCustomersRouteImport } from './routes/_app.masters.customers'
@@ -37,6 +38,11 @@ const AppIndexRoute = AppIndexRouteImport.update({
 const AppApplicationsIndexRoute = AppApplicationsIndexRouteImport.update({
   id: '/applications/',
   path: '/applications/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppMastersShippingLinesRoute = AppMastersShippingLinesRouteImport.update({
+  id: '/masters/shipping-lines',
+  path: '/masters/shipping-lines',
   getParentRoute: () => AppRoute,
 } as any)
 const AppMastersProductsRoute = AppMastersProductsRouteImport.update({
@@ -79,6 +85,7 @@ export interface FileRoutesByFullPath {
   '/masters/customers': typeof AppMastersCustomersRoute
   '/masters/ports': typeof AppMastersPortsRoute
   '/masters/products': typeof AppMastersProductsRoute
+  '/masters/shipping-lines': typeof AppMastersShippingLinesRoute
   '/applications/': typeof AppApplicationsIndexRoute
 }
 export interface FileRoutesByTo {
@@ -90,6 +97,7 @@ export interface FileRoutesByTo {
   '/masters/customers': typeof AppMastersCustomersRoute
   '/masters/ports': typeof AppMastersPortsRoute
   '/masters/products': typeof AppMastersProductsRoute
+  '/masters/shipping-lines': typeof AppMastersShippingLinesRoute
   '/applications': typeof AppApplicationsIndexRoute
 }
 export interface FileRoutesById {
@@ -103,6 +111,7 @@ export interface FileRoutesById {
   '/_app/masters/customers': typeof AppMastersCustomersRoute
   '/_app/masters/ports': typeof AppMastersPortsRoute
   '/_app/masters/products': typeof AppMastersProductsRoute
+  '/_app/masters/shipping-lines': typeof AppMastersShippingLinesRoute
   '/_app/applications/': typeof AppApplicationsIndexRoute
 }
 export interface FileRouteTypes {
@@ -116,6 +125,7 @@ export interface FileRouteTypes {
     | '/masters/customers'
     | '/masters/ports'
     | '/masters/products'
+    | '/masters/shipping-lines'
     | '/applications/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -127,6 +137,7 @@ export interface FileRouteTypes {
     | '/masters/customers'
     | '/masters/ports'
     | '/masters/products'
+    | '/masters/shipping-lines'
     | '/applications'
   id:
     | '__root__'
@@ -139,6 +150,7 @@ export interface FileRouteTypes {
     | '/_app/masters/customers'
     | '/_app/masters/ports'
     | '/_app/masters/products'
+    | '/_app/masters/shipping-lines'
     | '/_app/applications/'
   fileRoutesById: FileRoutesById
 }
@@ -175,6 +187,13 @@ declare module '@tanstack/react-router' {
       path: '/applications'
       fullPath: '/applications/'
       preLoaderRoute: typeof AppApplicationsIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/masters/shipping-lines': {
+      id: '/_app/masters/shipping-lines'
+      path: '/masters/shipping-lines'
+      fullPath: '/masters/shipping-lines'
+      preLoaderRoute: typeof AppMastersShippingLinesRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/masters/products': {
@@ -230,6 +249,7 @@ interface AppRouteChildren {
   AppMastersCustomersRoute: typeof AppMastersCustomersRoute
   AppMastersPortsRoute: typeof AppMastersPortsRoute
   AppMastersProductsRoute: typeof AppMastersProductsRoute
+  AppMastersShippingLinesRoute: typeof AppMastersShippingLinesRoute
   AppApplicationsIndexRoute: typeof AppApplicationsIndexRoute
 }
 
@@ -241,6 +261,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppMastersCustomersRoute: AppMastersCustomersRoute,
   AppMastersPortsRoute: AppMastersPortsRoute,
   AppMastersProductsRoute: AppMastersProductsRoute,
+  AppMastersShippingLinesRoute: AppMastersShippingLinesRoute,
   AppApplicationsIndexRoute: AppApplicationsIndexRoute,
 }
 

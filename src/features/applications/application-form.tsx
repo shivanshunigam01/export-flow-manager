@@ -17,8 +17,7 @@ interface Props {
 
 export function ApplicationForm({ initialValues, appNo, onSubmit, submitting }: Props) {
   const form = useForm<ApplicationForm>({
-    resolver: zodResolver(applicationSchema),
-    defaultValues: { ...emptyApplication(), ...initialValues },
+    defaultValues: { ...emptyApplication(), ...initialValues } as ApplicationForm,
   });
   const { register, control, handleSubmit, watch } = form;
   const items = useFieldArray({ control, name: "items" });

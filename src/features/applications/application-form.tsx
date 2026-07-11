@@ -1,5 +1,4 @@
-import { useForm, useFieldArray, type UseFormReturn } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm, useFieldArray } from "react-hook-form";
 import { applicationSchema, emptyApplication, type ApplicationForm } from "./schema";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";

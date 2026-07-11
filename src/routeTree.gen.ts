@@ -13,6 +13,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as AppIndexRouteImport } from './routes/_app.index'
 import { Route as AppApplicationsIndexRouteImport } from './routes/_app.applications.index'
+import { Route as AppMastersProductsRouteImport } from './routes/_app.masters.products'
 import { Route as AppMastersCustomersRouteImport } from './routes/_app.masters.customers'
 import { Route as AppApplicationsNewRouteImport } from './routes/_app.applications.new'
 import { Route as AppApplicationsIdRouteImport } from './routes/_app.applications.$id'
@@ -34,6 +35,11 @@ const AppIndexRoute = AppIndexRouteImport.update({
 const AppApplicationsIndexRoute = AppApplicationsIndexRouteImport.update({
   id: '/applications/',
   path: '/applications/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppMastersProductsRoute = AppMastersProductsRouteImport.update({
+  id: '/masters/products',
+  path: '/masters/products',
   getParentRoute: () => AppRoute,
 } as any)
 const AppMastersCustomersRoute = AppMastersCustomersRouteImport.update({
@@ -58,6 +64,7 @@ export interface FileRoutesByFullPath {
   '/applications/$id': typeof AppApplicationsIdRoute
   '/applications/new': typeof AppApplicationsNewRoute
   '/masters/customers': typeof AppMastersCustomersRoute
+  '/masters/products': typeof AppMastersProductsRoute
   '/applications/': typeof AppApplicationsIndexRoute
 }
 export interface FileRoutesByTo {
@@ -66,6 +73,7 @@ export interface FileRoutesByTo {
   '/applications/$id': typeof AppApplicationsIdRoute
   '/applications/new': typeof AppApplicationsNewRoute
   '/masters/customers': typeof AppMastersCustomersRoute
+  '/masters/products': typeof AppMastersProductsRoute
   '/applications': typeof AppApplicationsIndexRoute
 }
 export interface FileRoutesById {
@@ -76,6 +84,7 @@ export interface FileRoutesById {
   '/_app/applications/$id': typeof AppApplicationsIdRoute
   '/_app/applications/new': typeof AppApplicationsNewRoute
   '/_app/masters/customers': typeof AppMastersCustomersRoute
+  '/_app/masters/products': typeof AppMastersProductsRoute
   '/_app/applications/': typeof AppApplicationsIndexRoute
 }
 export interface FileRouteTypes {
@@ -86,6 +95,7 @@ export interface FileRouteTypes {
     | '/applications/$id'
     | '/applications/new'
     | '/masters/customers'
+    | '/masters/products'
     | '/applications/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -94,6 +104,7 @@ export interface FileRouteTypes {
     | '/applications/$id'
     | '/applications/new'
     | '/masters/customers'
+    | '/masters/products'
     | '/applications'
   id:
     | '__root__'
@@ -103,6 +114,7 @@ export interface FileRouteTypes {
     | '/_app/applications/$id'
     | '/_app/applications/new'
     | '/_app/masters/customers'
+    | '/_app/masters/products'
     | '/_app/applications/'
   fileRoutesById: FileRoutesById
 }
@@ -141,6 +153,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppApplicationsIndexRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/masters/products': {
+      id: '/_app/masters/products'
+      path: '/masters/products'
+      fullPath: '/masters/products'
+      preLoaderRoute: typeof AppMastersProductsRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/masters/customers': {
       id: '/_app/masters/customers'
       path: '/masters/customers'
@@ -170,6 +189,7 @@ interface AppRouteChildren {
   AppApplicationsIdRoute: typeof AppApplicationsIdRoute
   AppApplicationsNewRoute: typeof AppApplicationsNewRoute
   AppMastersCustomersRoute: typeof AppMastersCustomersRoute
+  AppMastersProductsRoute: typeof AppMastersProductsRoute
   AppApplicationsIndexRoute: typeof AppApplicationsIndexRoute
 }
 
@@ -178,6 +198,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppApplicationsIdRoute: AppApplicationsIdRoute,
   AppApplicationsNewRoute: AppApplicationsNewRoute,
   AppMastersCustomersRoute: AppMastersCustomersRoute,
+  AppMastersProductsRoute: AppMastersProductsRoute,
   AppApplicationsIndexRoute: AppApplicationsIndexRoute,
 }
 

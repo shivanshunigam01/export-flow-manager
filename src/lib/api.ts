@@ -13,11 +13,12 @@ export function setToken(token: string | null) {
 
 export function apiBase() {
   const configured = (import.meta.env.VITE_API_URL as string | undefined)?.replace(/\/$/, "");
+  if (configured) return configured;
   if (typeof window !== "undefined") {
     const host = window.location.hostname;
     if (host === "localhost" || host === "127.0.0.1") return "";
   }
-  return configured || "http://localhost:4000";
+  return "http://localhost:4000";
 }
 
 export class ApiError extends Error {
@@ -63,7 +64,7 @@ export async function api<T = unknown>(path: string, opts: Opts = {}): Promise<T
       body: opts.json !== undefined ? JSON.stringify(opts.json) : opts.body,
     });
   } catch {
-    throw new ApiError("Cannot reach the server. Make sure the backend is running on port 4000.", 0);
+    throw new ApiError(`Cannot reach the server at ${apiBase() || "the API"}. Check your connection and VITE_API_URL.`, 0);
   }
 
   const text = await res.text();

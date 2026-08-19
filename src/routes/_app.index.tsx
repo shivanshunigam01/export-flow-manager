@@ -1,8 +1,9 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
-import { FileText, CheckCircle2, XCircle, Clock, Ship, FileWarning, DollarSign, Container, Bell } from "lucide-react";
-import { format } from "date-fns";
+import { api } from "@/lib/api";
+import { ANALYTICS_ROLES, useAuth } from "@/features/auth/auth-context";
+import { FileText, CheckCircle2, XCircle, Clock, Ship, FileWarning, Bell } from "lucide-react";
+import { useEffect } from "react";
 
 export const Route = createFileRoute("/_app/")({
   component: Dashboard,
@@ -28,44 +29,59 @@ function Stat({ label, value, icon: Icon, tone = "primary" }: any) {
 }
 
 function Dashboard() {
-  const { data: apps } = useQuery({
-    queryKey: ["dashboard-apps"],
-    queryFn: async () => {
-      const { data, error } = await supabase.from("applications").select("id,app_no,status,current_stage,invoice_no,invoice_date,consignee_name,final_destination_text,total_amount,created_at").order("created_at", { ascending: false }).limit(10);
-      if (error) throw error;
-      return data;
-    },
-  });
+  const { user, roles, can } = useAuth();
+  const navigate = useNavigate();
 
-  const counts = {
-    total: apps?.length ?? 0,
-    pending: apps?.filter((a: any) => a.status === "pending_approval").length ?? 0,
-    approved: apps?.filter((a: any) => a.status === "approved").length ?? 0,
-    rejected: apps?.filter((a: any) => a.status === "rejected").length ?? 0,
-    shipped: apps?.filter((a: any) => a.status === "shipped").length ?? 0,
-  };
+  useEffect(() => {
+    const role = user?.role;
+    if (role && !ANALYTICS_ROLES.includes(role) && !roles.some((r) => ANALYTICS_ROLES.includes(r))) {
+      navigate({ to: "/applications" });
+    }
+  }, [user, roles, navigate]);
+
+  const { data: summary } = useQuery({
+    queryKey: ["dashboard-summary"],
+    queryFn: () => api<any>("/api/dashboard/summary"),
+    enabled: can("dashboard.view"),
+  });
+  const { data: recent } = useQuery({
+    queryKey: ["dashboard-recent"],
+    queryFn: () => api<any[]>("/api/dashboard/recent-applications"),
+    enabled: can("dashboard.view"),
+  });
+  const { data: pending } = useQuery({
+    queryKey: ["dashboard-pending"],
+    queryFn: () => api<any[]>("/api/dashboard/pending-approvals"),
+    enabled: can("applications.approve"),
+  });
+  const { data: notes } = useQuery({
+    queryKey: ["notifications"],
+    queryFn: () => api<{ items: any[]; unread: number }>("/api/notifications"),
+  });
 
   return (
     <div className="space-y-5">
       <div className="flex items-end justify-between">
         <div>
           <h1 className="text-xl font-serif font-bold">Dashboard</h1>
-          <p className="text-xs text-muted-foreground">Overview of export applications and workflow status</p>
+          <p className="text-xs text-muted-foreground">Live counts from the export application database</p>
         </div>
-        <Link to="/applications/new" className="inline-flex items-center gap-2 rounded bg-primary text-primary-foreground px-3 py-2 text-sm font-medium hover:opacity-90">
-          <FileText className="h-4 w-4" /> New Application
-        </Link>
+        {can("applications.create") && (
+          <Link to="/applications/new" className="inline-flex items-center gap-2 rounded bg-primary text-primary-foreground px-3 py-2 text-sm font-medium hover:opacity-90">
+            <FileText className="h-4 w-4" /> New Application
+          </Link>
+        )}
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-4 gap-3">
-        <Stat label="Total Applications" value={counts.total} icon={FileText} tone="primary" />
-        <Stat label="Pending Approval" value={counts.pending} icon={Clock} tone="warning" />
-        <Stat label="Approved" value={counts.approved} icon={CheckCircle2} tone="success" />
-        <Stat label="Rejected" value={counts.rejected} icon={XCircle} tone="danger" />
-        <Stat label="Shipment Ready" value={counts.shipped} icon={Ship} tone="primary" />
-        <Stat label="Documents Pending" value={0} icon={FileWarning} tone="warning" />
-        <Stat label="Payments Pending" value={0} icon={DollarSign} tone="warning" />
-        <Stat label="Containers Ready" value={0} icon={Container} tone="muted" />
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <Stat label="Total Applications" value={summary?.total ?? 0} icon={FileText} />
+        <Stat label="Draft" value={summary?.draft ?? 0} icon={FileWarning} tone="muted" />
+        <Stat label="Pending Approval" value={summary?.pending ?? 0} icon={Clock} tone="warning" />
+        <Stat label="Changes Required" value={summary?.changesRequired ?? 0} icon={FileWarning} tone="warning" />
+        <Stat label="Approved" value={summary?.approved ?? 0} icon={CheckCircle2} tone="success" />
+        <Stat label="In Progress" value={summary?.inProgress ?? 0} icon={Ship} />
+        <Stat label="Dispatched" value={summary?.dispatched ?? 0} icon={Ship} />
+        <Stat label="Rejected" value={summary?.rejected ?? 0} icon={XCircle} tone="danger" />
       </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
@@ -82,50 +98,47 @@ function Dashboard() {
                   <th>Invoice</th>
                   <th>Consignee</th>
                   <th>Destination</th>
-                  <th>Stage</th>
                   <th>Status</th>
-                  <th className="text-right">Amount</th>
                 </tr>
               </thead>
               <tbody>
-                {(apps ?? []).map((a: any) => (
+                {(recent ?? []).map((a: any) => (
                   <tr key={a.id}>
                     <td className="font-mono text-primary"><Link to="/applications/$id" params={{ id: a.id }} className="hover:underline">{a.app_no}</Link></td>
                     <td>{a.invoice_no ?? "—"}</td>
-                    <td className="truncate max-w-[180px]">{a.consignee_name ?? "—"}</td>
+                    <td>{a.consignee_name ?? "—"}</td>
                     <td>{a.final_destination_text ?? "—"}</td>
-                    <td><span className="text-xs">{a.current_stage}</span></td>
                     <td><StatusBadge status={a.status} /></td>
-                    <td className="text-right tabular-nums">{a.total_amount ? Number(a.total_amount).toLocaleString() : "—"}</td>
                   </tr>
                 ))}
-                {!apps?.length && (
-                  <tr><td colSpan={7} className="text-center py-10 text-muted-foreground text-sm">No applications yet. Create your first one.</td></tr>
-                )}
+                {!recent?.length && <tr><td colSpan={5} className="text-center py-10 text-muted-foreground text-sm">No applications yet.</td></tr>}
               </tbody>
             </table>
           </div>
         </div>
-
         <div className="space-y-4">
           <div className="gov-panel">
-            <div className="gov-panel-header"><span>Notifications</span><Bell className="h-4 w-4 text-muted-foreground" /></div>
-            <div className="p-3 text-sm text-muted-foreground">No notifications</div>
-          </div>
-          <div className="gov-panel">
-            <div className="gov-panel-header"><span>Today's Tasks</span></div>
-            <div className="p-3 text-sm text-muted-foreground">No pending tasks</div>
-          </div>
-          <div className="gov-panel">
-            <div className="gov-panel-header"><span>Upcoming Shipments</span></div>
+            <div className="gov-panel-header"><span>Pending Approvals</span></div>
             <div className="p-3 text-sm">
-              {apps?.filter((a: any) => a.status !== "shipped" && a.status !== "closed").slice(0, 4).map((a: any) => (
-                <div key={a.id} className="flex items-center justify-between py-1.5 border-b last:border-0">
+              {(pending ?? []).slice(0, 6).map((a: any) => (
+                <Link key={a.id} to="/applications/$id" params={{ id: a.id }} className="flex justify-between py-1.5 border-b last:border-0 hover:text-primary">
                   <span className="font-mono text-xs">{a.app_no}</span>
-                  <span className="text-xs text-muted-foreground">{a.invoice_date ? format(new Date(a.invoice_date), "dd MMM yyyy") : "—"}</span>
+                  <span className="text-xs">{a.consignee_name}</span>
+                </Link>
+              ))}
+              {!pending?.length && <div className="text-muted-foreground">Nothing waiting</div>}
+            </div>
+          </div>
+          <div className="gov-panel">
+            <div className="gov-panel-header"><span>Notifications</span><Bell className="h-4 w-4 text-muted-foreground" /></div>
+            <div className="p-3 text-sm">
+              {(notes?.items ?? []).slice(0, 5).map((n: any) => (
+                <div key={n.id} className="py-1.5 border-b last:border-0">
+                  <div className="text-xs font-medium">{n.title}</div>
+                  <div className="text-[11px] text-muted-foreground">{n.message || n.body}</div>
                 </div>
-              )) ?? null}
-              {!apps?.length && <div className="text-muted-foreground">Nothing scheduled</div>}
+              ))}
+              {!notes?.items?.length && <div className="text-muted-foreground">No notifications</div>}
             </div>
           </div>
         </div>
@@ -135,14 +148,19 @@ function Dashboard() {
 }
 
 export function StatusBadge({ status }: { status: string }) {
+  const key = String(status || "").toLowerCase();
   const map: Record<string, string> = {
     draft: "bg-muted text-muted-foreground",
-    in_progress: "bg-primary/10 text-primary",
-    pending_approval: "bg-warning/15 text-warning-foreground",
+    submitted: "bg-primary/10 text-primary",
+    under_review: "bg-warning/15 text-warning-foreground",
+    changes_required: "bg-warning/15 text-warning-foreground",
     approved: "bg-success/10 text-success",
+    in_progress: "bg-primary/10 text-primary",
+    ready_for_dispatch: "bg-primary/15 text-primary",
+    dispatched: "bg-primary/15 text-primary",
+    completed: "bg-success/10 text-success",
     rejected: "bg-destructive/10 text-destructive",
-    shipped: "bg-primary/15 text-primary",
-    closed: "bg-muted text-muted-foreground",
+    cancelled: "bg-muted text-muted-foreground",
   };
-  return <span className={`px-2 py-0.5 rounded text-[10px] font-semibold uppercase tracking-wider ${map[status] ?? "bg-muted"}`}>{status?.replace("_", " ")}</span>;
+  return <span className={`px-2 py-0.5 rounded text-[10px] font-semibold uppercase tracking-wider ${map[key] ?? "bg-muted"}`}>{String(status || "").replaceAll("_", " ")}</span>;
 }

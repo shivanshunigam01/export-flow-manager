@@ -2,50 +2,65 @@ import { Link, useRouterState } from "@tanstack/react-router";
 import {
   LayoutDashboard, FileText, Users, Package, Globe2, Anchor, Ship,
   Building2, FileStack, BellRing, BarChart3, Settings, ShieldCheck,
-  ClipboardList, FolderOpen,
+  ClipboardList, FolderOpen, Factory, ScrollText, Wallet,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/features/auth/auth-context";
 
-const NAV = [
+const NAV: {
+  section: string;
+  items: { to: string; label: string; icon: typeof LayoutDashboard; permission?: string }[];
+}[] = [
   { section: "Overview", items: [
-    { to: "/", label: "Dashboard", icon: LayoutDashboard },
+    { to: "/", label: "Dashboard", icon: LayoutDashboard, permission: "dashboard.view" },
   ]},
   { section: "Applications", items: [
-    { to: "/applications", label: "All Applications", icon: ClipboardList },
-    { to: "/applications/new", label: "New Application", icon: FileText },
+    { to: "/applications", label: "All Applications", icon: ClipboardList, permission: "applications.view" },
+    { to: "/applications/new", label: "New Application", icon: FileText, permission: "applications.create" },
   ]},
   { section: "Documents", items: [
-    { to: "/documents", label: "Document Library", icon: FolderOpen },
-    { to: "/documents/templates", label: "Templates", icon: FileStack },
+    { to: "/documents", label: "Document Library", icon: FolderOpen, permission: "documents.view" },
+    { to: "/documents/templates", label: "Templates", icon: FileStack, permission: "documents.view" },
+    { to: "/billing", label: "Billing / Proforma", icon: Wallet, permission: "billing.view" },
   ]},
   { section: "Masters", items: [
-    { to: "/masters/customers", label: "Customers", icon: Users },
-    { to: "/masters/products", label: "Products", icon: Package },
-    { to: "/masters/countries", label: "Countries", icon: Globe2 },
-    { to: "/masters/ports", label: "Ports", icon: Anchor },
-    { to: "/masters/shipping-lines", label: "Shipping Lines", icon: Ship },
-    { to: "/masters/banks", label: "Banks", icon: Building2 },
+    { to: "/masters/customers", label: "Customers", icon: Users, permission: "masters.view" },
+    { to: "/masters/suppliers", label: "Suppliers", icon: Factory, permission: "masters.view" },
+    { to: "/masters/products", label: "Products", icon: Package, permission: "masters.view" },
+    { to: "/masters/countries", label: "Countries", icon: Globe2, permission: "masters.view" },
+    { to: "/masters/ports", label: "Ports", icon: Anchor, permission: "masters.view" },
+    { to: "/masters/shipping-lines", label: "Shipping Lines", icon: Ship, permission: "masters.view" },
+    { to: "/masters/banks", label: "Banks", icon: Building2, permission: "masters.view" },
   ]},
   { section: "Operations", items: [
-    { to: "/reports", label: "Reports", icon: BarChart3 },
-    { to: "/notifications", label: "Notifications", icon: BellRing },
+    { to: "/reports", label: "Reports", icon: BarChart3, permission: "reports.view" },
+    { to: "/notifications", label: "Notifications", icon: BellRing, permission: "notifications.view" },
   ]},
   { section: "System", items: [
-    { to: "/admin/users", label: "Users & Roles", icon: ShieldCheck },
-    { to: "/settings", label: "Settings", icon: Settings },
+    { to: "/admin/users", label: "Users & Roles", icon: ShieldCheck, permission: "users.view" },
+    { to: "/admin/audit", label: "Audit Logs", icon: ScrollText, permission: "audit_logs.view" },
+    { to: "/settings", label: "Settings", icon: Settings, permission: "settings.manage" },
   ]},
-] as const;
+];
 
 export function Sidebar() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const { can, user } = useAuth();
+
+  const visible = NAV.map((sec) => ({
+    ...sec,
+    items: sec.items.filter((it) => !it.permission || can(it.permission)),
+  })).filter((sec) => sec.items.length > 0);
+
   return (
     <aside className="hidden md:flex flex-col w-60 shrink-0 border-r bg-sidebar text-sidebar-foreground h-[calc(100vh-96px)] sticky top-24">
       <div className="px-3 py-3 border-b">
-        <div className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">Government of Export</div>
+        <div className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">Shreehari Export House</div>
         <div className="text-sm font-bold leading-tight mt-0.5">EAMS Portal</div>
+        <div className="text-[10px] text-muted-foreground mt-1 truncate">{user?.name}</div>
       </div>
       <nav className="flex-1 overflow-y-auto py-2">
-        {NAV.map((sec) => (
+        {visible.map((sec) => (
           <div key={sec.section} className="px-2 pt-3 pb-1">
             <div className="gov-label px-2 mb-1">{sec.section}</div>
             <div className="space-y-0.5">
@@ -73,7 +88,7 @@ export function Sidebar() {
         ))}
       </nav>
       <div className="px-3 py-2 border-t text-[11px] text-muted-foreground">
-        v1.0 · Offline-ready build
+        v2.0 · Permission-based access
       </div>
     </aside>
   );

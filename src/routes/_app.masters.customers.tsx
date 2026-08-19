@@ -14,6 +14,7 @@ export const Route = createFileRoute("/_app/masters/customers")({
         { name: "phone", label: "Phone" },
         { name: "city", label: "City" },
         { name: "address", label: "Address", type: "textarea" },
+        { name: "country", label: "Country" },
         { name: "notes", label: "Notes", type: "textarea" },
       ]}
       displayColumns={["name", "contact_person", "city", "email", "phone"]}

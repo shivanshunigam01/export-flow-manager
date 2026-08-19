@@ -9,32 +9,35 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AppRouteImport } from './routes/_app'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AppIndexRouteImport } from './routes/_app.index'
-import { Route as AppSettingsRouteImport } from './routes/_app.settings'
-import { Route as AppReportsRouteImport } from './routes/_app.reports'
+import { Route as AppBillingRouteImport } from './routes/_app.billing'
 import { Route as AppNotificationsRouteImport } from './routes/_app.notifications'
-import { Route as AppDocumentsIndexRouteImport } from './routes/_app.documents.index'
-import { Route as AppApplicationsIndexRouteImport } from './routes/_app.applications.index'
-import { Route as AppMastersShippingLinesRouteImport } from './routes/_app.masters.shipping-lines'
-import { Route as AppMastersProductsRouteImport } from './routes/_app.masters.products'
-import { Route as AppMastersPortsRouteImport } from './routes/_app.masters.ports'
-import { Route as AppMastersCustomersRouteImport } from './routes/_app.masters.customers'
-import { Route as AppMastersCountriesRouteImport } from './routes/_app.masters.countries'
-import { Route as AppMastersBanksRouteImport } from './routes/_app.masters.banks'
-import { Route as AppDocumentsTemplatesRouteImport } from './routes/_app.documents.templates'
-import { Route as AppApplicationsNewRouteImport } from './routes/_app.applications.new'
-import { Route as AppApplicationsIdRouteImport } from './routes/_app.applications.$id'
+import { Route as AppReportsRouteImport } from './routes/_app.reports'
+import { Route as AppSettingsRouteImport } from './routes/_app.settings'
+import { Route as AppAdminAuditRouteImport } from './routes/_app.admin.audit'
 import { Route as AppAdminUsersRouteImport } from './routes/_app.admin.users'
+import { Route as AppApplicationsIndexRouteImport } from './routes/_app.applications.index'
+import { Route as AppApplicationsIdRouteImport } from './routes/_app.applications.$id'
+import { Route as AppApplicationsNewRouteImport } from './routes/_app.applications.new'
+import { Route as AppDocumentsIndexRouteImport } from './routes/_app.documents.index'
+import { Route as AppDocumentsTemplatesRouteImport } from './routes/_app.documents.templates'
+import { Route as AppMastersBanksRouteImport } from './routes/_app.masters.banks'
+import { Route as AppMastersCountriesRouteImport } from './routes/_app.masters.countries'
+import { Route as AppMastersCustomersRouteImport } from './routes/_app.masters.customers'
+import { Route as AppMastersPortsRouteImport } from './routes/_app.masters.ports'
+import { Route as AppMastersProductsRouteImport } from './routes/_app.masters.products'
+import { Route as AppMastersShippingLinesRouteImport } from './routes/_app.masters.shipping-lines'
+import { Route as AppMastersSuppliersRouteImport } from './routes/_app.masters.suppliers'
 
+const AppRoute = AppRouteImport.update({
+  id: '/_app',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AppRoute = AppRouteImport.update({
-  id: '/_app',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AppIndexRoute = AppIndexRouteImport.update({
@@ -42,14 +45,9 @@ const AppIndexRoute = AppIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AppRoute,
 } as any)
-const AppSettingsRoute = AppSettingsRouteImport.update({
-  id: '/settings',
-  path: '/settings',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppReportsRoute = AppReportsRouteImport.update({
-  id: '/reports',
-  path: '/reports',
+const AppBillingRoute = AppBillingRouteImport.update({
+  id: '/billing',
+  path: '/billing',
   getParentRoute: () => AppRoute,
 } as any)
 const AppNotificationsRoute = AppNotificationsRouteImport.update({
@@ -57,59 +55,19 @@ const AppNotificationsRoute = AppNotificationsRouteImport.update({
   path: '/notifications',
   getParentRoute: () => AppRoute,
 } as any)
-const AppDocumentsIndexRoute = AppDocumentsIndexRouteImport.update({
-  id: '/documents/',
-  path: '/documents/',
+const AppReportsRoute = AppReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
   getParentRoute: () => AppRoute,
 } as any)
-const AppApplicationsIndexRoute = AppApplicationsIndexRouteImport.update({
-  id: '/applications/',
-  path: '/applications/',
+const AppSettingsRoute = AppSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
   getParentRoute: () => AppRoute,
 } as any)
-const AppMastersShippingLinesRoute = AppMastersShippingLinesRouteImport.update({
-  id: '/masters/shipping-lines',
-  path: '/masters/shipping-lines',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppMastersProductsRoute = AppMastersProductsRouteImport.update({
-  id: '/masters/products',
-  path: '/masters/products',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppMastersPortsRoute = AppMastersPortsRouteImport.update({
-  id: '/masters/ports',
-  path: '/masters/ports',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppMastersCustomersRoute = AppMastersCustomersRouteImport.update({
-  id: '/masters/customers',
-  path: '/masters/customers',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppMastersCountriesRoute = AppMastersCountriesRouteImport.update({
-  id: '/masters/countries',
-  path: '/masters/countries',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppMastersBanksRoute = AppMastersBanksRouteImport.update({
-  id: '/masters/banks',
-  path: '/masters/banks',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppDocumentsTemplatesRoute = AppDocumentsTemplatesRouteImport.update({
-  id: '/documents/templates',
-  path: '/documents/templates',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppApplicationsNewRoute = AppApplicationsNewRouteImport.update({
-  id: '/applications/new',
-  path: '/applications/new',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppApplicationsIdRoute = AppApplicationsIdRouteImport.update({
-  id: '/applications/$id',
-  path: '/applications/$id',
+const AppAdminAuditRoute = AppAdminAuditRouteImport.update({
+  id: '/admin/audit',
+  path: '/admin/audit',
   getParentRoute: () => AppRoute,
 } as any)
 const AppAdminUsersRoute = AppAdminUsersRouteImport.update({
@@ -117,13 +75,75 @@ const AppAdminUsersRoute = AppAdminUsersRouteImport.update({
   path: '/admin/users',
   getParentRoute: () => AppRoute,
 } as any)
+const AppApplicationsIndexRoute = AppApplicationsIndexRouteImport.update({
+  id: '/applications/',
+  path: '/applications/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppApplicationsIdRoute = AppApplicationsIdRouteImport.update({
+  id: '/applications/$id',
+  path: '/applications/$id',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppApplicationsNewRoute = AppApplicationsNewRouteImport.update({
+  id: '/applications/new',
+  path: '/applications/new',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDocumentsIndexRoute = AppDocumentsIndexRouteImport.update({
+  id: '/documents/',
+  path: '/documents/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDocumentsTemplatesRoute = AppDocumentsTemplatesRouteImport.update({
+  id: '/documents/templates',
+  path: '/documents/templates',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppMastersBanksRoute = AppMastersBanksRouteImport.update({
+  id: '/masters/banks',
+  path: '/masters/banks',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppMastersCountriesRoute = AppMastersCountriesRouteImport.update({
+  id: '/masters/countries',
+  path: '/masters/countries',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppMastersCustomersRoute = AppMastersCustomersRouteImport.update({
+  id: '/masters/customers',
+  path: '/masters/customers',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppMastersPortsRoute = AppMastersPortsRouteImport.update({
+  id: '/masters/ports',
+  path: '/masters/ports',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppMastersProductsRoute = AppMastersProductsRouteImport.update({
+  id: '/masters/products',
+  path: '/masters/products',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppMastersShippingLinesRoute = AppMastersShippingLinesRouteImport.update({
+  id: '/masters/shipping-lines',
+  path: '/masters/shipping-lines',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppMastersSuppliersRoute = AppMastersSuppliersRouteImport.update({
+  id: '/masters/suppliers',
+  path: '/masters/suppliers',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AppIndexRoute
   '/auth': typeof AuthRoute
+  '/billing': typeof AppBillingRoute
   '/notifications': typeof AppNotificationsRoute
   '/reports': typeof AppReportsRoute
   '/settings': typeof AppSettingsRoute
+  '/admin/audit': typeof AppAdminAuditRoute
   '/admin/users': typeof AppAdminUsersRoute
   '/applications/$id': typeof AppApplicationsIdRoute
   '/applications/new': typeof AppApplicationsNewRoute
@@ -134,15 +154,18 @@ export interface FileRoutesByFullPath {
   '/masters/ports': typeof AppMastersPortsRoute
   '/masters/products': typeof AppMastersProductsRoute
   '/masters/shipping-lines': typeof AppMastersShippingLinesRoute
+  '/masters/suppliers': typeof AppMastersSuppliersRoute
   '/applications/': typeof AppApplicationsIndexRoute
   '/documents/': typeof AppDocumentsIndexRoute
 }
 export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
+  '/billing': typeof AppBillingRoute
   '/notifications': typeof AppNotificationsRoute
   '/reports': typeof AppReportsRoute
   '/settings': typeof AppSettingsRoute
   '/': typeof AppIndexRoute
+  '/admin/audit': typeof AppAdminAuditRoute
   '/admin/users': typeof AppAdminUsersRoute
   '/applications/$id': typeof AppApplicationsIdRoute
   '/applications/new': typeof AppApplicationsNewRoute
@@ -153,6 +176,7 @@ export interface FileRoutesByTo {
   '/masters/ports': typeof AppMastersPortsRoute
   '/masters/products': typeof AppMastersProductsRoute
   '/masters/shipping-lines': typeof AppMastersShippingLinesRoute
+  '/masters/suppliers': typeof AppMastersSuppliersRoute
   '/applications': typeof AppApplicationsIndexRoute
   '/documents': typeof AppDocumentsIndexRoute
 }
@@ -160,10 +184,12 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_app': typeof AppRouteWithChildren
   '/auth': typeof AuthRoute
+  '/_app/billing': typeof AppBillingRoute
   '/_app/notifications': typeof AppNotificationsRoute
   '/_app/reports': typeof AppReportsRoute
   '/_app/settings': typeof AppSettingsRoute
   '/_app/': typeof AppIndexRoute
+  '/_app/admin/audit': typeof AppAdminAuditRoute
   '/_app/admin/users': typeof AppAdminUsersRoute
   '/_app/applications/$id': typeof AppApplicationsIdRoute
   '/_app/applications/new': typeof AppApplicationsNewRoute
@@ -174,6 +200,7 @@ export interface FileRoutesById {
   '/_app/masters/ports': typeof AppMastersPortsRoute
   '/_app/masters/products': typeof AppMastersProductsRoute
   '/_app/masters/shipping-lines': typeof AppMastersShippingLinesRoute
+  '/_app/masters/suppliers': typeof AppMastersSuppliersRoute
   '/_app/applications/': typeof AppApplicationsIndexRoute
   '/_app/documents/': typeof AppDocumentsIndexRoute
 }
@@ -182,9 +209,11 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/billing'
     | '/notifications'
     | '/reports'
     | '/settings'
+    | '/admin/audit'
     | '/admin/users'
     | '/applications/$id'
     | '/applications/new'
@@ -195,15 +224,18 @@ export interface FileRouteTypes {
     | '/masters/ports'
     | '/masters/products'
     | '/masters/shipping-lines'
+    | '/masters/suppliers'
     | '/applications/'
     | '/documents/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/auth'
+    | '/billing'
     | '/notifications'
     | '/reports'
     | '/settings'
     | '/'
+    | '/admin/audit'
     | '/admin/users'
     | '/applications/$id'
     | '/applications/new'
@@ -214,16 +246,19 @@ export interface FileRouteTypes {
     | '/masters/ports'
     | '/masters/products'
     | '/masters/shipping-lines'
+    | '/masters/suppliers'
     | '/applications'
     | '/documents'
   id:
     | '__root__'
     | '/_app'
     | '/auth'
+    | '/_app/billing'
     | '/_app/notifications'
     | '/_app/reports'
     | '/_app/settings'
     | '/_app/'
+    | '/_app/admin/audit'
     | '/_app/admin/users'
     | '/_app/applications/$id'
     | '/_app/applications/new'
@@ -234,6 +269,7 @@ export interface FileRouteTypes {
     | '/_app/masters/ports'
     | '/_app/masters/products'
     | '/_app/masters/shipping-lines'
+    | '/_app/masters/suppliers'
     | '/_app/applications/'
     | '/_app/documents/'
   fileRoutesById: FileRoutesById
@@ -245,18 +281,18 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/auth': {
-      id: '/auth'
-      path: '/auth'
-      fullPath: '/auth'
-      preLoaderRoute: typeof AuthRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/_app': {
       id: '/_app'
       path: ''
       fullPath: '/'
       preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_app/': {
@@ -266,18 +302,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppIndexRouteImport
       parentRoute: typeof AppRoute
     }
-    '/_app/settings': {
-      id: '/_app/settings'
-      path: '/settings'
-      fullPath: '/settings'
-      preLoaderRoute: typeof AppSettingsRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/reports': {
-      id: '/_app/reports'
-      path: '/reports'
-      fullPath: '/reports'
-      preLoaderRoute: typeof AppReportsRouteImport
+    '/_app/billing': {
+      id: '/_app/billing'
+      path: '/billing'
+      fullPath: '/billing'
+      preLoaderRoute: typeof AppBillingRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/notifications': {
@@ -287,81 +316,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppNotificationsRouteImport
       parentRoute: typeof AppRoute
     }
-    '/_app/documents/': {
-      id: '/_app/documents/'
-      path: '/documents'
-      fullPath: '/documents/'
-      preLoaderRoute: typeof AppDocumentsIndexRouteImport
+    '/_app/reports': {
+      id: '/_app/reports'
+      path: '/reports'
+      fullPath: '/reports'
+      preLoaderRoute: typeof AppReportsRouteImport
       parentRoute: typeof AppRoute
     }
-    '/_app/applications/': {
-      id: '/_app/applications/'
-      path: '/applications'
-      fullPath: '/applications/'
-      preLoaderRoute: typeof AppApplicationsIndexRouteImport
+    '/_app/settings': {
+      id: '/_app/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AppSettingsRouteImport
       parentRoute: typeof AppRoute
     }
-    '/_app/masters/shipping-lines': {
-      id: '/_app/masters/shipping-lines'
-      path: '/masters/shipping-lines'
-      fullPath: '/masters/shipping-lines'
-      preLoaderRoute: typeof AppMastersShippingLinesRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/masters/products': {
-      id: '/_app/masters/products'
-      path: '/masters/products'
-      fullPath: '/masters/products'
-      preLoaderRoute: typeof AppMastersProductsRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/masters/ports': {
-      id: '/_app/masters/ports'
-      path: '/masters/ports'
-      fullPath: '/masters/ports'
-      preLoaderRoute: typeof AppMastersPortsRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/masters/customers': {
-      id: '/_app/masters/customers'
-      path: '/masters/customers'
-      fullPath: '/masters/customers'
-      preLoaderRoute: typeof AppMastersCustomersRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/masters/countries': {
-      id: '/_app/masters/countries'
-      path: '/masters/countries'
-      fullPath: '/masters/countries'
-      preLoaderRoute: typeof AppMastersCountriesRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/masters/banks': {
-      id: '/_app/masters/banks'
-      path: '/masters/banks'
-      fullPath: '/masters/banks'
-      preLoaderRoute: typeof AppMastersBanksRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/documents/templates': {
-      id: '/_app/documents/templates'
-      path: '/documents/templates'
-      fullPath: '/documents/templates'
-      preLoaderRoute: typeof AppDocumentsTemplatesRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/applications/new': {
-      id: '/_app/applications/new'
-      path: '/applications/new'
-      fullPath: '/applications/new'
-      preLoaderRoute: typeof AppApplicationsNewRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/applications/$id': {
-      id: '/_app/applications/$id'
-      path: '/applications/$id'
-      fullPath: '/applications/$id'
-      preLoaderRoute: typeof AppApplicationsIdRouteImport
+    '/_app/admin/audit': {
+      id: '/_app/admin/audit'
+      path: '/admin/audit'
+      fullPath: '/admin/audit'
+      preLoaderRoute: typeof AppAdminAuditRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/admin/users': {
@@ -371,14 +344,100 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAdminUsersRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/applications/': {
+      id: '/_app/applications/'
+      path: '/applications'
+      fullPath: '/applications/'
+      preLoaderRoute: typeof AppApplicationsIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/applications/$id': {
+      id: '/_app/applications/$id'
+      path: '/applications/$id'
+      fullPath: '/applications/$id'
+      preLoaderRoute: typeof AppApplicationsIdRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/applications/new': {
+      id: '/_app/applications/new'
+      path: '/applications/new'
+      fullPath: '/applications/new'
+      preLoaderRoute: typeof AppApplicationsNewRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/documents/': {
+      id: '/_app/documents/'
+      path: '/documents'
+      fullPath: '/documents/'
+      preLoaderRoute: typeof AppDocumentsIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/documents/templates': {
+      id: '/_app/documents/templates'
+      path: '/documents/templates'
+      fullPath: '/documents/templates'
+      preLoaderRoute: typeof AppDocumentsTemplatesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/masters/banks': {
+      id: '/_app/masters/banks'
+      path: '/masters/banks'
+      fullPath: '/masters/banks'
+      preLoaderRoute: typeof AppMastersBanksRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/masters/countries': {
+      id: '/_app/masters/countries'
+      path: '/masters/countries'
+      fullPath: '/masters/countries'
+      preLoaderRoute: typeof AppMastersCountriesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/masters/customers': {
+      id: '/_app/masters/customers'
+      path: '/masters/customers'
+      fullPath: '/masters/customers'
+      preLoaderRoute: typeof AppMastersCustomersRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/masters/ports': {
+      id: '/_app/masters/ports'
+      path: '/masters/ports'
+      fullPath: '/masters/ports'
+      preLoaderRoute: typeof AppMastersPortsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/masters/products': {
+      id: '/_app/masters/products'
+      path: '/masters/products'
+      fullPath: '/masters/products'
+      preLoaderRoute: typeof AppMastersProductsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/masters/shipping-lines': {
+      id: '/_app/masters/shipping-lines'
+      path: '/masters/shipping-lines'
+      fullPath: '/masters/shipping-lines'
+      preLoaderRoute: typeof AppMastersShippingLinesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/masters/suppliers': {
+      id: '/_app/masters/suppliers'
+      path: '/masters/suppliers'
+      fullPath: '/masters/suppliers'
+      preLoaderRoute: typeof AppMastersSuppliersRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
 interface AppRouteChildren {
+  AppBillingRoute: typeof AppBillingRoute
   AppNotificationsRoute: typeof AppNotificationsRoute
   AppReportsRoute: typeof AppReportsRoute
   AppSettingsRoute: typeof AppSettingsRoute
   AppIndexRoute: typeof AppIndexRoute
+  AppAdminAuditRoute: typeof AppAdminAuditRoute
   AppAdminUsersRoute: typeof AppAdminUsersRoute
   AppApplicationsIdRoute: typeof AppApplicationsIdRoute
   AppApplicationsNewRoute: typeof AppApplicationsNewRoute
@@ -389,15 +448,18 @@ interface AppRouteChildren {
   AppMastersPortsRoute: typeof AppMastersPortsRoute
   AppMastersProductsRoute: typeof AppMastersProductsRoute
   AppMastersShippingLinesRoute: typeof AppMastersShippingLinesRoute
+  AppMastersSuppliersRoute: typeof AppMastersSuppliersRoute
   AppApplicationsIndexRoute: typeof AppApplicationsIndexRoute
   AppDocumentsIndexRoute: typeof AppDocumentsIndexRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
+  AppBillingRoute: AppBillingRoute,
   AppNotificationsRoute: AppNotificationsRoute,
   AppReportsRoute: AppReportsRoute,
   AppSettingsRoute: AppSettingsRoute,
   AppIndexRoute: AppIndexRoute,
+  AppAdminAuditRoute: AppAdminAuditRoute,
   AppAdminUsersRoute: AppAdminUsersRoute,
   AppApplicationsIdRoute: AppApplicationsIdRoute,
   AppApplicationsNewRoute: AppApplicationsNewRoute,
@@ -408,6 +470,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppMastersPortsRoute: AppMastersPortsRoute,
   AppMastersProductsRoute: AppMastersProductsRoute,
   AppMastersShippingLinesRoute: AppMastersShippingLinesRoute,
+  AppMastersSuppliersRoute: AppMastersSuppliersRoute,
   AppApplicationsIndexRoute: AppApplicationsIndexRoute,
   AppDocumentsIndexRoute: AppDocumentsIndexRoute,
 }
@@ -421,3 +484,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

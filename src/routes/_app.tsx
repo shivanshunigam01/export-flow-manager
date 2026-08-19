@@ -1,9 +1,9 @@
-import { createFileRoute, Outlet } from "@tanstack/react-router";
+import { createFileRoute, Outlet, useNavigate } from "@tanstack/react-router";
 import { Sidebar } from "@/features/layout/sidebar";
 import { TopBar } from "@/features/layout/topbar";
 import { useAuth } from "@/features/auth/auth-context";
 import { useEffect } from "react";
-import { useNavigate } from "@tanstack/react-router";
+import mark from "@/assets/shreehari-mark.png";
 
 export const Route = createFileRoute("/_app")({
   ssr: false,
@@ -20,15 +20,21 @@ function AppLayout() {
 
   if (loading) {
     return (
-      <div className="min-h-screen grid place-items-center text-sm text-muted-foreground">
-        Loading portal…
+      <div className="min-h-screen grid place-items-center bg-[#111111] text-white">
+        <div className="flex flex-col items-center gap-4">
+          <img src={mark} alt="Shreehari" className="h-16 w-16 rounded-2xl object-cover ring-1 ring-white/10" />
+          <div className="h-1 w-28 overflow-hidden rounded-full bg-white/10">
+            <div className="h-full w-1/2 animate-pulse bg-[#FF7E00]" />
+          </div>
+          <p className="text-xs text-white/55 tracking-wide">Loading staff portal…</p>
+        </div>
       </div>
     );
   }
   if (!user) return null;
 
   return (
-    <div className="min-h-screen bg-muted/30">
+    <div className="min-h-screen bg-[#f6f4f1]">
       <TopBar />
       <div className="flex">
         <Sidebar />

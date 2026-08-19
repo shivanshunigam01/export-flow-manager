@@ -66,11 +66,18 @@ function Dashboard() {
           <h1 className="text-xl font-serif font-bold">Dashboard</h1>
           <p className="text-xs text-muted-foreground">Live counts from the export application database</p>
         </div>
-        {can("applications.create") && (
-          <Link to="/applications/new" className="inline-flex items-center gap-2 rounded bg-primary text-primary-foreground px-3 py-2 text-sm font-medium hover:opacity-90">
-            <FileText className="h-4 w-4" /> New Application
-          </Link>
-        )}
+        <div className="flex flex-wrap gap-2">
+          {can("applications.create") && (
+            <Link to="/applications/new" className="inline-flex items-center gap-2 rounded-md bg-primary text-primary-foreground px-3.5 py-2 text-sm font-semibold shadow-[0_8px_20px_rgba(255,126,0,0.22)] hover:opacity-90">
+              <FileText className="h-4 w-4" /> New Application
+            </Link>
+          )}
+          {can("users.create") && (
+            <Link to="/admin/users" className="inline-flex items-center gap-2 rounded-md border bg-background px-3.5 py-2 text-sm font-medium hover:bg-accent">
+              Add staff
+            </Link>
+          )}
+        </div>
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">

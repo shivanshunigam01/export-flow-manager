@@ -48,6 +48,7 @@ function SettingsPage() {
           ["aeo", "AEO"],
           ["bin", "BIN"],
           ["lutNo", "LUT No"],
+          ["documentYear", "Document year (e.g. 2025-26 or 2028)"],
           ["phone", "Phone"],
           ["website", "Website"],
         ].map(([k, label]) => (

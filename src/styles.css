@@ -35,75 +35,82 @@
   --color-gov-header: var(--gov-header);
   --color-gov-strip: var(--gov-strip);
   --color-gov-band: var(--gov-band);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-serif: "Source Serif 4", Georgia, serif;
 }
 
 :root {
-  --radius: 0.375rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.18 0.02 250);
+  --radius: 0.5rem;
+  --background: oklch(0.985 0.004 85);
+  --foreground: oklch(0.22 0.01 80);
 
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.18 0.02 250);
+  --card: oklch(0.995 0.002 85);
+  --card-foreground: oklch(0.22 0.01 80);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.18 0.02 250);
+  --popover-foreground: oklch(0.22 0.01 80);
 
-  /* Gov blue */
-  --primary: oklch(0.42 0.14 255);
-  --primary-foreground: oklch(0.99 0 0);
+  /* Brand orange from Shreehari logo */
+  --primary: oklch(0.72 0.18 55);
+  --primary-foreground: oklch(0.16 0.01 80);
 
-  --secondary: oklch(0.965 0.01 250);
-  --secondary-foreground: oklch(0.22 0.05 255);
+  --secondary: oklch(0.955 0.008 80);
+  --secondary-foreground: oklch(0.28 0.01 80);
 
-  --muted: oklch(0.97 0.005 250);
-  --muted-foreground: oklch(0.45 0.02 255);
+  --muted: oklch(0.96 0.006 80);
+  --muted-foreground: oklch(0.48 0.01 80);
 
-  --accent: oklch(0.94 0.03 255);
-  --accent-foreground: oklch(0.22 0.08 255);
+  --accent: oklch(0.95 0.04 55);
+  --accent-foreground: oklch(0.32 0.08 50);
 
   --destructive: oklch(0.55 0.22 27);
   --destructive-foreground: oklch(0.99 0 0);
 
   --success: oklch(0.52 0.15 155);
   --success-foreground: oklch(0.99 0 0);
-  --warning: oklch(0.72 0.16 75);
-  --warning-foreground: oklch(0.18 0.02 250);
+  --warning: oklch(0.78 0.15 75);
+  --warning-foreground: oklch(0.28 0.06 55);
 
-  --border: oklch(0.9 0.01 250);
-  --input: oklch(0.9 0.01 250);
-  --ring: oklch(0.42 0.14 255);
+  --border: oklch(0.9 0.01 80);
+  --input: oklch(0.9 0.01 80);
+  --ring: oklch(0.72 0.18 55);
 
-  /* Government header colors — deep navy + saffron strip */
-  --gov-header: oklch(0.28 0.09 260);
-  --gov-strip: oklch(0.72 0.17 60);
-  --gov-band: oklch(0.96 0.02 250);
+  --gov-header: oklch(0.18 0.005 80);
+  --gov-strip: oklch(0.72 0.18 55);
+  --gov-band: oklch(0.96 0.02 70);
 
-  --sidebar: oklch(0.98 0.005 250);
-  --sidebar-foreground: oklch(0.22 0.03 250);
-  --sidebar-primary: oklch(0.42 0.14 255);
-  --sidebar-primary-foreground: oklch(0.99 0 0);
-  --sidebar-accent: oklch(0.94 0.03 255);
-  --sidebar-accent-foreground: oklch(0.22 0.08 255);
-  --sidebar-border: oklch(0.9 0.01 250);
-  --sidebar-ring: oklch(0.42 0.14 255);
+  --sidebar: oklch(0.99 0.004 80);
+  --sidebar-foreground: oklch(0.28 0.01 80);
+  --sidebar-primary: oklch(0.72 0.18 55);
+  --sidebar-primary-foreground: oklch(0.16 0.01 80);
+  --sidebar-accent: oklch(0.95 0.04 55);
+  --sidebar-accent-foreground: oklch(0.32 0.08 50);
+  --sidebar-border: oklch(0.91 0.01 80);
+  --sidebar-ring: oklch(0.72 0.18 55);
 }
 
 .dark {
-  --background: oklch(0.14 0.02 250);
-  --foreground: oklch(0.98 0.005 250);
-  --card: oklch(0.18 0.02 250);
-  --card-foreground: oklch(0.98 0.005 250);
-  --popover: oklch(0.18 0.02 250);
-  --popover-foreground: oklch(0.98 0.005 250);
-  --primary: oklch(0.72 0.14 250);
-  --primary-foreground: oklch(0.14 0.02 250);
-  --secondary: oklch(0.24 0.02 250);
-  --secondary-foreground: oklch(0.98 0.005 250);
-  --muted: oklch(0.22 0.02 250);
-  --muted-foreground: oklch(0.7 0.02 250);
-  --accent: oklch(0.28 0.05 255);
-  --accent-foreground: oklch(0.98 0.005 250);
+  --background: oklch(0.16 0.01 80);
+  --foreground: oklch(0.97 0.005 80);
+  --card: oklch(0.2 0.01 80);
+  --card-foreground: oklch(0.97 0.005 80);
+  --popover: oklch(0.2 0.01 80);
+  --popover-foreground: oklch(0.97 0.005 80);
+  --primary: oklch(0.75 0.18 55);
+  --primary-foreground: oklch(0.16 0.01 80);
+  --secondary: oklch(0.24 0.01 80);
+  --secondary-foreground: oklch(0.97 0.005 80);
+  --muted: oklch(0.24 0.01 80);
+  --muted-foreground: oklch(0.72 0.01 80);
+  --accent: oklch(0.3 0.06 55);
+  --accent-foreground: oklch(0.97 0.005 80);
   --border: oklch(1 0 0 / 12%);
   --input: oklch(1 0 0 / 15%);
 }

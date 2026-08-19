@@ -68,12 +68,15 @@ function AppDetail() {
 
   async function generate(type: string) {
     try {
-      const doc = await api<{ id: string; file_url: string; file_name: string }>(`/api/applications/${id}/documents/generate`, {
+      const doc = await api<any>(`/api/applications/${id}/documents/generate`, {
         method: "POST",
         json: { type },
       });
-      toast.success(`${type} generated`);
-      await downloadDocument(doc.id, doc.file_name);
+      const files = doc.items?.length ? doc.items : [doc];
+      toast.success(`${type} generated${files.length > 1 ? ` (${files.length} files)` : ""}`);
+      for (const f of files) {
+        if (f?.id) await downloadDocument(f.id, f.file_name);
+      }
       qc.invalidateQueries({ queryKey: ["app", id] });
     } catch (e: any) {
       toast.error(e.message ?? "PDF failed");
@@ -94,9 +97,12 @@ function AppDetail() {
               <StatusBadge status={app.status} />
             </div>
             <div className="text-xs text-muted-foreground mt-1">
-              {app.consignee_name || "—"} · {app.final_destination_text || "—"} · Invoice {app.invoice_no || "—"} · Stage {app.current_stage}
+              {app.consignee_name || "—"} · {app.final_destination_text || "—"} · FY {app.financial_year || "—"} · PI {app.proforma_no || "—"} · EXP {app.invoice_no || "—"} · INR {app.inr_invoice_no || "—"} · Stage {app.current_stage}{app.payment_received ? " · Paid" : ""}
             </div>
             <div className="text-xs text-muted-foreground">Created by {app.created_by_name || user?.name}</div>
+            {app.meta?.training && (
+              <p className="mt-2 text-xs rounded border border-amber-300 bg-amber-50 text-amber-950 px-2 py-1.5 max-w-xl">{app.meta.training}</p>
+            )}
           </div>
           <div className="flex flex-wrap gap-2">
             {canSubmit && <Button onClick={() => action(status === "CHANGES_REQUIRED" ? "/resubmit" : "/submit", {}, "Submitted")}>Submit</Button>}
@@ -109,12 +115,16 @@ function AppDetail() {
             )}
             {can("documents.generate") && (
               <>
-                <Button variant="outline" size="sm" onClick={() => generate("invoice")}>Invoice PDF</Button>
-                <Button variant="outline" size="sm" onClick={() => generate("packing_list")}>Packing List</Button>
-                <Button variant="outline" size="sm" onClick={() => generate("annexure")}>Annexure</Button>
-                <Button variant="outline" size="sm" onClick={() => generate("vgm")}>VGM</Button>
                 <Button variant="outline" size="sm" onClick={() => generate("proforma")}>Proforma</Button>
+                <Button variant="outline" size="sm" onClick={() => generate("invoice")}>Commercial invoice</Button>
+                <Button variant="outline" size="sm" onClick={() => generate("inr_invoice")}>INR invoice</Button>
+                <Button variant="outline" size="sm" onClick={() => generate("packing_list")}>Packing list</Button>
+                <Button variant="outline" size="sm" onClick={() => generate("annexure")}>Annexure</Button>
+                <Button variant="outline" size="sm" onClick={() => generate("vgm")}>VGM{containers.length > 1 ? ` (${containers.length})` : ""}</Button>
               </>
+            )}
+            {can("applications.edit") && !app.payment_received && (
+              <Button variant="secondary" size="sm" onClick={() => action("/payment-received", {}, "Payment marked received")}>Payment received</Button>
             )}
             <Button variant="outline" onClick={() => navigate({ to: "/applications" })}>← Back</Button>
           </div>

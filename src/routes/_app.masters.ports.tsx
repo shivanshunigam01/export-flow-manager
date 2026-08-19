@@ -9,10 +9,11 @@ export const Route = createFileRoute("/_app/masters/ports")({
       fields={[
         { name: "name", label: "Port Name", required: true },
         { name: "code", label: "Port Code" },
-        { name: "port_type", label: "Type (sea/air/ICD)" },
+        { name: "country", label: "Country" },
+        { name: "address", label: "Port address", type: "textarea" },
       ]}
-      displayColumns={["name", "code", "port_type"]}
-      columnLabels={{ name: "Name", code: "Code", port_type: "Type" }}
+      displayColumns={["name", "code", "country", "address", "port_type"]}
+      columnLabels={{ name: "Name", code: "Code", country: "Country", address: "Address", port_type: "Type" }}
     />
   ),
 });

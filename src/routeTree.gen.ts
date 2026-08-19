@@ -13,6 +13,7 @@ import { Route as AppRouteImport } from './routes/_app'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AppIndexRouteImport } from './routes/_app.index'
 import { Route as AppBillingRouteImport } from './routes/_app.billing'
+import { Route as AppFxRouteImport } from './routes/_app.fx'
 import { Route as AppNotificationsRouteImport } from './routes/_app.notifications'
 import { Route as AppReportsRouteImport } from './routes/_app.reports'
 import { Route as AppSettingsRouteImport } from './routes/_app.settings'
@@ -48,6 +49,11 @@ const AppIndexRoute = AppIndexRouteImport.update({
 const AppBillingRoute = AppBillingRouteImport.update({
   id: '/billing',
   path: '/billing',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppFxRoute = AppFxRouteImport.update({
+  id: '/fx',
+  path: '/fx',
   getParentRoute: () => AppRoute,
 } as any)
 const AppNotificationsRoute = AppNotificationsRouteImport.update({
@@ -140,6 +146,7 @@ export interface FileRoutesByFullPath {
   '/': typeof AppIndexRoute
   '/auth': typeof AuthRoute
   '/billing': typeof AppBillingRoute
+  '/fx': typeof AppFxRoute
   '/notifications': typeof AppNotificationsRoute
   '/reports': typeof AppReportsRoute
   '/settings': typeof AppSettingsRoute
@@ -161,6 +168,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/billing': typeof AppBillingRoute
+  '/fx': typeof AppFxRoute
   '/notifications': typeof AppNotificationsRoute
   '/reports': typeof AppReportsRoute
   '/settings': typeof AppSettingsRoute
@@ -185,6 +193,7 @@ export interface FileRoutesById {
   '/_app': typeof AppRouteWithChildren
   '/auth': typeof AuthRoute
   '/_app/billing': typeof AppBillingRoute
+  '/_app/fx': typeof AppFxRoute
   '/_app/notifications': typeof AppNotificationsRoute
   '/_app/reports': typeof AppReportsRoute
   '/_app/settings': typeof AppSettingsRoute
@@ -210,6 +219,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/billing'
+    | '/fx'
     | '/notifications'
     | '/reports'
     | '/settings'
@@ -231,6 +241,7 @@ export interface FileRouteTypes {
   to:
     | '/auth'
     | '/billing'
+    | '/fx'
     | '/notifications'
     | '/reports'
     | '/settings'
@@ -254,6 +265,7 @@ export interface FileRouteTypes {
     | '/_app'
     | '/auth'
     | '/_app/billing'
+    | '/_app/fx'
     | '/_app/notifications'
     | '/_app/reports'
     | '/_app/settings'
@@ -307,6 +319,13 @@ declare module '@tanstack/react-router' {
       path: '/billing'
       fullPath: '/billing'
       preLoaderRoute: typeof AppBillingRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/fx': {
+      id: '/_app/fx'
+      path: '/fx'
+      fullPath: '/fx'
+      preLoaderRoute: typeof AppFxRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/notifications': {
@@ -433,6 +452,7 @@ declare module '@tanstack/react-router' {
 
 interface AppRouteChildren {
   AppBillingRoute: typeof AppBillingRoute
+  AppFxRoute: typeof AppFxRoute
   AppNotificationsRoute: typeof AppNotificationsRoute
   AppReportsRoute: typeof AppReportsRoute
   AppSettingsRoute: typeof AppSettingsRoute
@@ -455,6 +475,7 @@ interface AppRouteChildren {
 
 const AppRouteChildren: AppRouteChildren = {
   AppBillingRoute: AppBillingRoute,
+  AppFxRoute: AppFxRoute,
   AppNotificationsRoute: AppNotificationsRoute,
   AppReportsRoute: AppReportsRoute,
   AppSettingsRoute: AppSettingsRoute,

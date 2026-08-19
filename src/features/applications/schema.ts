@@ -4,6 +4,8 @@ export const containerSchema = z.object({
   container_no: z.string().default(""),
   line_seal_no: z.string().default(""),
   electronic_seal_no: z.string().default(""),
+  line_seal_photo_url: z.string().optional().default(""),
+  electronic_seal_photo_url: z.string().optional().default(""),
   size: z.string().default("40 FT"),
   quantity: z.string().default("1x40 FT"),
   packages: z.coerce.number().optional().nullable(),
@@ -28,6 +30,7 @@ export const itemSchema = z.object({
   amount: z.coerce.number().optional().nullable(),
   net_weight: z.coerce.number().optional().nullable(),
   gross_weight: z.coerce.number().optional().nullable(),
+  brand_name: z.string().optional().default(""),
   image_url: z.string().optional().default(""),
 });
 
@@ -63,6 +66,15 @@ export const applicationSchema = z.object({
   invoice_date: z.string().default(""),
   invoice_currency: z.string().default("USD"),
   exchange_rate: z.coerce.number().optional().nullable(),
+  fx_amount: z.coerce.number().optional().nullable(),
+  inr_amount: z.coerce.number().optional().nullable(),
+  inr_invoice_no: z.string().default(""),
+  inr_invoice_date: z.string().default(""),
+  payment_received: z.boolean().optional().default(false),
+  vgm_date: z.string().default(""),
+  price_increase: z.coerce.number().default(0),
+  freight: z.coerce.number().default(0),
+  transit_note: z.string().default(""),
   consignee_name: z.string().default(""),
   consignee_address: z.string().default(""),
   consignee_phone: z.string().default(""),
@@ -70,15 +82,25 @@ export const applicationSchema = z.object({
   consignee_tax_id: z.string().default(""),
   customer_id: z.string().default(""),
   notify_party: z.string().default(""),
+  notify_name: z.string().default(""),
+  notify_address: z.string().default(""),
+  notify_phone: z.string().default(""),
   second_notify: z.string().default(""),
   third_party: z.string().default(""),
+  other_consignees: z.array(z.object({
+    name: z.string().default(""),
+    address: z.string().default(""),
+    phone: z.string().default(""),
+  })).default([]),
   supplier_id: z.string().default(""),
   supplier_name: z.string().default(""),
   supplier_address: z.string().default(""),
   supplier_gst: z.string().default(""),
   factory_address: z.string().default(""),
   port_loading_text: z.string().default(""),
+  port_loading_address: z.string().default(""),
   port_discharge_text: z.string().default(""),
+  port_discharge_address: z.string().default(""),
   country_origin: z.string().default("INDIA"),
   final_destination_text: z.string().default(""),
   country_id: z.string().default(""),
@@ -140,16 +162,30 @@ export function emptyApplication(): ApplicationForm {
     items: [{ description: "", quantity: null, unit: "PCS", rate: null, amount: null, net_weight: null, gross_weight: null, packages: null, dimensions: "", hsn_code: "", image_url: "" }],
     packing_lines: [],
     gst_bills: [{ bill_no: "", bill_date: "", company_name: "", gst_no: "" }],
+    other_consignees: [],
   });
 }
 
 export function applicationPayload(form: ApplicationForm, extra: Record<string, unknown> = {}) {
-  const total_amount = (form.items ?? []).reduce((s, it) => s + (Number(it.amount) || 0), 0) + (Number(form.loading_charge) || 0);
+  const extras = Number(form.loading_charge || 0) + Number(form.price_increase || 0) + Number(form.freight || 0);
+  const total_amount = (form.items ?? []).reduce((s, it) => s + (Number(it.amount) || 0), 0) + extras;
   const total_packages = (form.items ?? []).reduce((s, it) => s + (Number(it.packages) || 0), 0);
+  const total_net_weight = (form.items ?? []).reduce((s, it) => s + (Number(it.net_weight) || 0), 0);
+  const total_gross_weight = (form.items ?? []).reduce((s, it) => s + (Number(it.gross_weight) || 0), 0);
+  const rate = Number(form.exchange_rate) || 0;
+  const fx_amount = total_amount;
+  const inr_amount = rate ? Number((fx_amount * rate).toFixed(2)) : Number(form.inr_amount) || 0;
+  const vgm_date = form.vgm_date || form.examination_date || "";
   return {
     ...form,
     total_amount,
     total_packages,
+    total_net_weight,
+    total_gross_weight,
+    fx_amount,
+    inr_amount,
+    vgm_date,
+    examination_date: vgm_date,
     meta: {
       bank_name: form.bank_name,
       bank_account: form.bank_account,

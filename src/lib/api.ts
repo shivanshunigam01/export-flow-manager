@@ -64,7 +64,10 @@ export async function api<T = unknown>(path: string, opts: Opts = {}): Promise<T
       body: opts.json !== undefined ? JSON.stringify(opts.json) : opts.body,
     });
   } catch {
-    throw new ApiError(`Cannot reach the server at ${apiBase() || "the API"}. Check your connection and VITE_API_URL.`, 0);
+    throw new ApiError(
+      `Cannot reach the server at ${apiBase() || "the API"}. Check your connection and VITE_API_URL.`,
+      0,
+    );
   }
 
   const text = await res.text();
@@ -82,7 +85,10 @@ export async function api<T = unknown>(path: string, opts: Opts = {}): Promise<T
   }
 
   if (!res.ok && !(data && typeof data === "object" && "success" in data)) {
-    throw new ApiError(data?.error || data?.message || res.statusText || "Request failed", res.status);
+    throw new ApiError(
+      data?.error || data?.message || res.statusText || "Request failed",
+      res.status,
+    );
   }
   return unwrap<T>(data, res.status);
 }
@@ -118,4 +124,3 @@ export async function downloadDocument(id: string, filename = "document.pdf") {
   a.click();
   URL.revokeObjectURL(url);
 }
-

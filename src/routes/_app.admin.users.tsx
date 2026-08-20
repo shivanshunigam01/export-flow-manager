@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
-import { ROLE_HELP, ROLE_LABELS, type AppRole, useAuth } from "@/features/auth/auth-context";
+import { PRIMARY_ADMIN_EMAIL, PRIMARY_ADMIN_NAME, ROLE_HELP, ROLE_LABELS, type AppRole, useAuth } from "@/features/auth/auth-context";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -51,6 +51,10 @@ const EMPTY = {
   active: true,
 };
 
+function isPrimaryAdmin(row: { email?: string }) {
+  return String(row.email || "").toLowerCase() === PRIMARY_ADMIN_EMAIL;
+}
+
 function UsersPage() {
   const { isAdmin, can } = useAuth();
   const canManage = isAdmin || can("users.create");
@@ -80,7 +84,7 @@ function UsersPage() {
     setEditing(row);
     setCreated(null);
     setForm({
-      name: row.name || row.full_name || "",
+      name: isPrimaryAdmin(row) ? PRIMARY_ADMIN_NAME : row.name || row.full_name || "",
       email: row.email,
       password: "",
       role: row.role,
@@ -158,8 +162,8 @@ function UsersPage() {
         <div>
           <h1 className="text-xl font-serif font-bold">Users & Roles</h1>
           <p className="text-xs text-muted-foreground max-w-2xl">
-            Add staff accounts here. They sign in on the login page with the email and password you set.
-            Use <strong>Staff — Documentation</strong> or <strong>Staff — Sales</strong> so they can create applications, PI, and invoices.
+            Administrator <strong>{PRIMARY_ADMIN_NAME}</strong> can add as many staff members as needed.
+            Each person signs in with the email and password you set. Use <strong>Staff — Documentation</strong> or <strong>Staff — Sales</strong> so they can create applications, PI, and invoices.
           </p>
         </div>
         {canManage && (
@@ -167,6 +171,13 @@ function UsersPage() {
             <Plus className="h-4 w-4 mr-2" /> Add staff
           </Button>
         )}
+      </div>
+
+      <div className="rounded-[2px] border border-[#d9d9d9] bg-white px-4 py-3 text-sm">
+        <div className="font-semibold">{PRIMARY_ADMIN_NAME} · Administrator</div>
+        <p className="text-xs text-muted-foreground mt-1">
+          Signed in as the portal admin. Add multiple staff accounts below — documentation, sales, accounts, warehouse, and more. Each staff member gets their own login.
+        </p>
       </div>
 
       <div className="grid sm:grid-cols-3 gap-3">
@@ -204,7 +215,12 @@ function UsersPage() {
               )}
               {(data ?? []).map((u) => (
                 <tr key={u.id}>
-                  <td className="font-medium">{u.name || u.full_name || "—"}</td>
+                  <td className="font-medium">
+                    {isPrimaryAdmin(u) ? PRIMARY_ADMIN_NAME : u.name || u.full_name || "—"}
+                    {isPrimaryAdmin(u) && (
+                      <Badge variant="secondary" className="ml-2 bg-primary/10 text-primary border-0">Admin</Badge>
+                    )}
+                  </td>
                   <td>{u.email}</td>
                   <td>{ROLE_LABELS[u.role] ?? u.role}</td>
                   <td className="text-xs">{(u.countries ?? []).join(", ") || "—"}</td>
@@ -217,7 +233,7 @@ function UsersPage() {
                   {canManage && (
                     <td className="text-right">
                       <Button variant="ghost" size="icon" onClick={() => openEdit(u)}><Pencil className="h-3.5 w-3.5" /></Button>
-                      {u.active && (
+                      {u.active && !isPrimaryAdmin(u) && (
                         <Button variant="ghost" size="icon" onClick={() => deactivate(u)}><UserX className="h-3.5 w-3.5 text-destructive" /></Button>
                       )}
                     </td>
@@ -239,11 +255,13 @@ function UsersPage() {
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-w-lg">
           <DialogHeader>
-            <DialogTitle>{editing ? "Edit staff" : "Add staff account"}</DialogTitle>
+            <DialogTitle>{editing ? (isPrimaryAdmin(editing) ? `Edit ${PRIMARY_ADMIN_NAME}` : "Edit staff") : "Add staff account"}</DialogTitle>
             <DialogDescription>
               {created
                 ? "Share these details with the staff member. They use the same staff sign-in page."
-                : "Give them Documentation or Sales so they can create applications, PI, and invoices."}
+                : editing && isPrimaryAdmin(editing)
+                  ? `${PRIMARY_ADMIN_NAME} is the fixed administrator. Staff accounts are added separately.`
+                  : "Give them Documentation or Sales so they can create applications, PI, and invoices. You can add as many staff as you need."}
             </DialogDescription>
           </DialogHeader>
 
@@ -280,11 +298,22 @@ function UsersPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div className="md:col-span-2">
                   <Label>Full name</Label>
-                  <Input className="mt-1" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+                  <Input
+                    className="mt-1"
+                    value={editing && isPrimaryAdmin(editing) ? PRIMARY_ADMIN_NAME : form.name}
+                    disabled={Boolean(editing && isPrimaryAdmin(editing))}
+                    onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  />
                 </div>
                 <div className="md:col-span-2">
                   <Label>Email (login)</Label>
-                  <Input className="mt-1" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
+                  <Input
+                    className="mt-1"
+                    type="email"
+                    value={form.email}
+                    disabled={Boolean(editing && isPrimaryAdmin(editing))}
+                    onChange={(e) => setForm({ ...form, email: e.target.value })}
+                  />
                 </div>
                 <div className="md:col-span-2">
                   <Label>{editing ? "New password (leave blank to keep)" : "Password"}</Label>
@@ -292,7 +321,11 @@ function UsersPage() {
                 </div>
                 <div className="md:col-span-2">
                   <Label>Role</Label>
-                  <Select value={form.role} onValueChange={(v) => setForm({ ...form, role: v as AppRole })}>
+                  <Select
+                    value={form.role}
+                    onValueChange={(v) => setForm({ ...form, role: v as AppRole })}
+                    disabled={Boolean(editing && isPrimaryAdmin(editing))}
+                  >
                     <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
                     <SelectContent>
                       {STAFF_ROLES.map((r) => (

@@ -1,6 +1,9 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import { api, getToken, setToken, ApiError } from "@/lib/api";
 
+export const PRIMARY_ADMIN_NAME = "Kishore Patel";
+export const PRIMARY_ADMIN_EMAIL = "admin@srihari.co";
+
 export type AppRole =
   | "super_admin" | "admin" | "ceo" | "manager" | "documentation" | "sales" | "accounts"
   | "warehouse" | "production" | "purchase" | "quality" | "viewer";

@@ -124,3 +124,20 @@ export async function downloadDocument(id: string, filename = "document.pdf") {
   a.click();
   URL.revokeObjectURL(url);
 }
+
+export async function downloadBilling(id: string, filename = "bill.pdf") {
+  const res = await fetch(`${apiBase()}/api/billing/${id}/download`, {
+    headers: { Authorization: `Bearer ${getToken() || ""}` },
+  });
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new ApiError(data?.message || data?.error || "Download failed", res.status, data?.code);
+  }
+  const blob = await res.blob();
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+}

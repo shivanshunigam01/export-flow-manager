@@ -8,6 +8,7 @@ import { Plus, Trash2, Save, ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { api, apiUpload, fileUrl } from "@/lib/api";
+import { toast } from "sonner";
 
 interface Props {
   initialValues?: Partial<ApplicationForm>;
@@ -15,9 +16,10 @@ interface Props {
   onSubmit: (data: ApplicationForm) => Promise<void> | void;
   submitting?: boolean;
   saveLabel?: string;
+  focusStep?: number;
 }
 
-export function ApplicationForm({ initialValues, appNo, onSubmit, submitting, saveLabel }: Props) {
+export function ApplicationForm({ initialValues, appNo, onSubmit, submitting, saveLabel, focusStep }: Props) {
   const [step, setStep] = useState(0);
   const form = useForm<ApplicationForm>({
     defaultValues: { ...emptyApplication(), ...initialValues } as ApplicationForm,
@@ -32,6 +34,10 @@ export function ApplicationForm({ initialValues, appNo, onSubmit, submitting, sa
   useEffect(() => {
     if (initialValues) reset({ ...emptyApplication(), ...initialValues } as ApplicationForm);
   }, [appNo]); // eslint-disable-line
+
+  useEffect(() => {
+    if (typeof focusStep === "number") setStep(focusStep);
+  }, [focusStep]);
 
   const watched = watch();
 
@@ -110,11 +116,16 @@ export function ApplicationForm({ initialValues, appNo, onSubmit, submitting, sa
   }
 
   async function uploadLineImage(i: number, file: File) {
-    const fd = new FormData();
-    fd.append("file", file);
-    fd.append("folder", "products");
-    const stored = await apiUpload<{ url: string }>("/api/uploads/image", fd);
-    setValue(`items.${i}.image_url`, stored.url);
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+      fd.append("folder", "products");
+      const stored = await apiUpload<{ url: string }>("/api/uploads/image", fd);
+      setValue(`items.${i}.image_url`, stored.url);
+      toast.success("Product image uploaded — Save the application before generating the PI.");
+    } catch (e: any) {
+      toast.error(e.message ?? "Image upload failed");
+    }
   }
 
   async function uploadSeal(i: number, field: "line_seal_photo_url" | "electronic_seal_photo_url", file: File) {
@@ -217,7 +228,7 @@ export function ApplicationForm({ initialValues, appNo, onSubmit, submitting, sa
                   <th>Master</th>
                   <th>Description</th>
                   <th>Brand</th>
-                  <th>Image</th>
+                  <th>Image <span className="text-[10px] font-normal text-destructive">(required for PI)</span></th>
                   <th>Pkgs</th>
                   <th>Qty</th>
                   <th>Unit</th>
@@ -243,9 +254,21 @@ export function ApplicationForm({ initialValues, appNo, onSubmit, submitting, sa
                         <Input placeholder="Dimensions" {...register(`items.${i}.dimensions`)} className="h-7 mt-1 text-xs" />
                       </td>
                       <td><Input placeholder="Brand" {...register(`items.${i}.brand_name`)} className="h-8 w-24" /></td>
-                      <td>
-                        {watched.items?.[i]?.image_url ? <img src={fileUrl(watched.items[i].image_url)} alt="" className="h-10 w-10 object-cover rounded border" /> : null}
-                        <input type="file" accept="image/*" className="text-[10px] w-28" onChange={(e) => { const file = e.target.files?.[0]; if (file) void uploadLineImage(i, file); }} />
+                      <td className="min-w-40">
+                        {watched.items?.[i]?.image_url ? (
+                          <img src={fileUrl(watched.items[i].image_url)} alt="" className="h-16 w-16 object-cover rounded border mb-1" />
+                        ) : (
+                          <p className="text-[10px] text-destructive mb-1">Upload JPG/PNG</p>
+                        )}
+                        <input
+                          type="file"
+                          accept="image/jpeg,image/png"
+                          className="text-[10px] w-36"
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) void uploadLineImage(i, file);
+                          }}
+                        />
                       </td>
                       <td><Input type="number" {...register(`items.${i}.packages`)} className="h-8 w-16" /></td>
                       <td><Input type="number" {...register(`items.${i}.quantity`)} className="h-8 w-16" onBlur={() => setValue(`items.${i}.amount`, Number((qty * rate).toFixed(2)))} /></td>
@@ -438,7 +461,7 @@ export function ApplicationForm({ initialValues, appNo, onSubmit, submitting, sa
             <div><span className="gov-label">Items</span><div>{watched.items?.length || 0}</div></div>
             <div><span className="gov-label">Containers</span><div>{watched.containers?.[0]?.container_no || "—"}</div></div>
           </dl>
-          <p className="text-xs text-muted-foreground">Save the draft, then Submit from the application header. Official PDFs are generated on the server after save.</p>
+          <p className="text-xs text-muted-foreground">Save after uploading product photos. Then use Proforma in the header. Every product line needs a JPG/PNG image.</p>
         </Section>
       )}
 

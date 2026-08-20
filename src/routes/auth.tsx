@@ -61,7 +61,7 @@ function AuthPage() {
               Export. Import.<br />Documented.
             </h1>
             <p className="text-white/70 text-sm leading-relaxed max-w-md">
-              Sign in with the account issued by your administrator. Access follows your role and assigned countries.
+              Sign in with the account issued by administrator Kishore Patel. Access follows your role and assigned countries.
             </p>
             <div className="grid grid-cols-3 gap-3 pt-2">
               {[
@@ -140,9 +140,9 @@ function AuthPage() {
                 </form>
 
                 <div className="mt-6 rounded-xl border border-white/10 bg-white/5 p-3 text-[11px] text-white/55 space-y-1">
-                  <div className="font-medium text-white/80">First-run admin</div>
+                  <div className="font-medium text-white/80">Administrator — Kishore Patel</div>
                   <div>admin@srihari.co · Admin@1234</div>
-                  <div>Create staff under Users &amp; Roles. They sign in here with their own credentials.</div>
+                  <div>Kishore can add multiple staff under Users &amp; Roles. Staff sign in here with their own credentials.</div>
                 </div>
               </div>
             </div>

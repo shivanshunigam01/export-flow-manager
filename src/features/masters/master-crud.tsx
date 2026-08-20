@@ -115,7 +115,7 @@ export function MasterCrud({ title, description, table, fields, displayColumns, 
                         )}
                         <Input
                           type="file"
-                          accept="image/jpeg,image/png,image/webp"
+                          accept="image/jpeg,image/png"
                           disabled={uploading}
                           onChange={(e) => {
                             const file = e.target.files?.[0];

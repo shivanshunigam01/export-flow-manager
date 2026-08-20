@@ -6,9 +6,11 @@ import { applicationPayload, emptyApplication, type ApplicationForm as AppFormTy
 import { StatusBadge } from "./_app.index";
 import { format } from "date-fns";
 import { CheckCircle2, Circle, Clock } from "lucide-react";
+import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/features/auth/auth-context";
+import { ApplicationStepper } from "@/features/applications/application-stepper";
 
 export const Route = createFileRoute("/_app/applications/$id")({
   component: AppDetail,
@@ -19,6 +21,7 @@ function AppDetail() {
   const navigate = useNavigate();
   const qc = useQueryClient();
   const { can, user } = useAuth();
+  const [focusStep, setFocusStep] = useState<number | undefined>();
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["app", id],
@@ -67,6 +70,14 @@ function AppDetail() {
   }
 
   async function generate(type: string) {
+    if (type === "proforma" || type === "invoice" || type === "inr_invoice") {
+      const missing = (items ?? []).filter((it: any) => String(it.description || "").trim() && !String(it.image_url || "").trim());
+      if (missing.length) {
+        setFocusStep(3);
+        toast.error("Upload a product image on every PI / invoice line, then Save, then generate.");
+        return;
+      }
+    }
     try {
       const doc = await api<any>(`/api/applications/${id}/documents/generate`, {
         method: "POST",
@@ -78,31 +89,49 @@ function AppDetail() {
         if (f?.id) await downloadDocument(f.id, f.file_name);
       }
       qc.invalidateQueries({ queryKey: ["app", id] });
+      qc.invalidateQueries({ queryKey: ["billing"] });
     } catch (e: any) {
       toast.error(e.message ?? "PDF failed");
+      if (e.status === 422 || /product image/i.test(String(e.message || ""))) setFocusStep(3);
     }
   }
 
   const status = String(app.status || "").toUpperCase();
   const canSubmit = can("applications.submit") && ["DRAFT", "CHANGES_REQUIRED"].includes(status);
   const canReview = can("applications.approve") && status === "UNDER_REVIEW";
+  const title = app.consignee_name || app.created_by_name || app.app_no;
 
   return (
     <div className="space-y-4">
+      <article className="overflow-hidden rounded-[2px] border border-[#d9d9d9] bg-white">
+        <header className="flex flex-wrap items-start justify-between gap-2 border-b border-[#ececec] bg-[#f7f7f7] px-4 py-2.5">
+          <div>
+            <h1 className="text-[15px] font-bold tracking-tight">{title}</h1>
+            <div className="mt-0.5 flex items-center gap-2 text-xs text-muted-foreground">
+              <span className="font-mono text-primary">{app.app_no}</span>
+              <StatusBadge status={app.status} />
+            </div>
+          </div>
+          <div className="text-right text-[11px] leading-5 text-[#6f6f6f]">
+            <div>Created: {app.created_at ? format(new Date(app.created_at), "dd-MMM-yyyy, h:mm a") : "-"}</div>
+            <div>Modified: {app.updated_at ? format(new Date(app.updated_at), "dd-MMM-yyyy, h:mm a") : "-"}</div>
+            <div>Created by {app.created_by_name || user?.name}</div>
+          </div>
+        </header>
+        <div className="px-4 py-4">
+          {app.meta?.training && (
+            <p className="mb-3 text-xs rounded border border-amber-300 bg-amber-50 text-amber-950 px-2 py-1.5 max-w-xl">{app.meta.training}</p>
+          )}
+          <ApplicationStepper app={{ ...app, stages }} />
+        </div>
+      </article>
+
       <div className="gov-panel">
         <div className="p-4 flex flex-wrap items-start justify-between gap-3">
           <div>
-            <div className="flex items-center gap-3">
-              <h1 className="font-serif text-xl font-bold">{app.app_no}</h1>
-              <StatusBadge status={app.status} />
+            <div className="text-xs text-muted-foreground">
+              {app.final_destination_text || "—"} · FY {app.financial_year || "—"} · PI {app.proforma_no || "—"} · EXP {app.invoice_no || "—"} · INR {app.inr_invoice_no || "—"} · Stage {app.current_stage}{app.payment_received ? " · Paid" : ""}
             </div>
-            <div className="text-xs text-muted-foreground mt-1">
-              {app.consignee_name || "—"} · {app.final_destination_text || "—"} · FY {app.financial_year || "—"} · PI {app.proforma_no || "—"} · EXP {app.invoice_no || "—"} · INR {app.inr_invoice_no || "—"} · Stage {app.current_stage}{app.payment_received ? " · Paid" : ""}
-            </div>
-            <div className="text-xs text-muted-foreground">Created by {app.created_by_name || user?.name}</div>
-            {app.meta?.training && (
-              <p className="mt-2 text-xs rounded border border-amber-300 bg-amber-50 text-amber-950 px-2 py-1.5 max-w-xl">{app.meta.training}</p>
-            )}
           </div>
           <div className="flex flex-wrap gap-2">
             {canSubmit && <Button onClick={() => action(status === "CHANGES_REQUIRED" ? "/resubmit" : "/submit", {}, "Submitted")}>Submit</Button>}
@@ -133,7 +162,7 @@ function AppDetail() {
 
       <div className="grid grid-cols-1 xl:grid-cols-4 gap-4">
         <div className="xl:col-span-3 space-y-4">
-          <ApplicationForm appNo={app.app_no} initialValues={initial} onSubmit={save} />
+          <ApplicationForm appNo={app.app_no} initialValues={initial} onSubmit={save} focusStep={focusStep} />
 
           <section className="gov-panel">
             <div className="gov-panel-header"><span>Documents</span></div>
@@ -163,7 +192,7 @@ function AppDetail() {
         </div>
 
         <aside className="gov-panel h-fit sticky top-[120px]">
-          <div className="gov-panel-header"><span>Application Timeline</span></div>
+          <div className="gov-panel-header"><span>Stage notes</span></div>
           <ol className="p-3 space-y-2">
             {(stages ?? []).map((s: any) => {
               const Icon = s.status === "completed" ? CheckCircle2 : s.status === "in_progress" ? Clock : Circle;
